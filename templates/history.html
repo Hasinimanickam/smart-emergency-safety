@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Emergency History</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}">
+
+
+</head>
+
+<body>
+
+
+<!-- Navigation -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🚨 Smart Emergency
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/#report">
+            Emergency
+        </a>
+
+        <a href="/#guide">
+            Safety Guide
+        </a>
+
+        <div class="nav-user">
+
+            👤 {{ session.get('user_name') }}
+
+            <a href="/logout">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- History Section -->
+
+<section class="section">
+
+    <h2>📋 Emergency History</h2>
+
+    <p>
+        Your previous emergency assessments are shown below.
+    </p>
+
+
+    {% if reports %}
+
+    <div class="history-container">
+
+        {% for report in reports %}
+
+        <div class="history-card">
+
+            <h3>
+                🚨 {{ report[0]|title }}
+            </h3>
+
+            <p>
+                <strong>Injured:</strong>
+                {{ report[1]|title }}
+            </p>
+
+            <p>
+                <strong>Bleeding:</strong>
+                {{ report[2]|title }}
+            </p>
+
+            <p>
+                <strong>Breathing Difficulty:</strong>
+                {{ report[3]|title }}
+            </p>
+
+            <p>
+                <strong>People Affected:</strong>
+                {{ report[4] }}
+            </p>
+
+            <p>
+                <strong>Risk Score:</strong>
+                {{ report[5] }}/100
+            </p>
+
+            <p>
+                <strong>Severity:</strong>
+
+                <span class="severity">
+                    {{ report[6] }}
+                </span>
+
+            </p>
+
+            <p>
+                <strong>Date & Time:</strong>
+                {{ report[7] }}
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="history-empty">
+
+        <h3>📭 No Emergency Reports</h3>
+
+        <p>
+            You have not submitted any emergency reports yet.
+        </p>
+
+        <a href="/#report">
+            🚨 Create Emergency Report
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- Footer -->
+
+<footer>
+
+    <p>
+        © 2026 Smart Emergency. All rights reserved.
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Emergency Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        🚨 Smart Emergency
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/#report">
+            Emergency
+        </a>
+
+        <a href="/#guide">
+            Safety Guide
+        </a>
+
+        <a href="/emergency-history">
+            📋 History
+        </a>
+
+        <a href="/dashboard">
+            📊 Dashboard
+        </a>
+
+        <div class="nav-user">
+
+            👤 {{ session.get('user_name') }}
+
+            <a href="/logout">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<section class="section dashboard-section">
+
+
+    <!-- ================= DASHBOARD HEADER ================= -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <p class="dashboard-label">
+                EMERGENCY COMMAND CENTER
+            </p>
+
+            <h1>
+                📊 Safety Dashboard
+            </h1>
+
+            <p>
+                Monitor your emergency assessments,
+                risk levels and response history.
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-status">
+
+            <span class="status-dot"></span>
+
+            System Active
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= STAT CARDS ================= -->
+
+    <div class="dashboard-cards">
+
+
+        <!-- TOTAL -->
+
+        <div class="dashboard-card total-card">
+
+            <div class="dashboard-icon">
+                📋
+            </div>
+
+            <div>
+
+                <h3>
+                    Total Reports
+                </h3>
+
+                <strong>
+                    {{ total_reports }}
+                </strong>
+
+                <p>
+                    Emergency assessments
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- LOW -->
+
+        <div class="dashboard-card low-card">
+
+            <div class="dashboard-icon">
+                🟢
+            </div>
+
+            <div>
+
+                <h3>
+                    Low Risk
+                </h3>
+
+                <strong>
+                    {{ low_count }}
+                </strong>
+
+                <p>
+                    Low severity reports
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- MEDIUM -->
+
+        <div class="dashboard-card medium-card">
+
+            <div class="dashboard-icon">
+                🟡
+            </div>
+
+            <div>
+
+                <h3>
+                    Medium Risk
+                </h3>
+
+                <strong>
+                    {{ medium_count }}
+                </strong>
+
+                <p>
+                    Moderate attention
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- HIGH -->
+
+        <div class="dashboard-card high-card">
+
+            <div class="dashboard-icon">
+                🟠
+            </div>
+
+            <div>
+
+                <h3>
+                    High Risk
+                </h3>
+
+                <strong>
+                    {{ high_count }}
+                </strong>
+
+                <p>
+                    Immediate attention
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- CRITICAL -->
+
+        <div class="dashboard-card critical-card">
+
+            <div class="dashboard-icon">
+                🔴
+            </div>
+
+            <div>
+
+                <h3>
+                    Critical
+                </h3>
+
+                <strong>
+                    {{ critical_count }}
+                </strong>
+
+                <p>
+                    Urgent emergency
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================= RESPONSE PANEL ================= -->
+
+    <div class="response-panel">
+
+        <div>
+
+            <span class="response-icon">
+                🆘
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <h2>
+                Need Emergency Assistance?
+            </h2>
+
+            <p>
+                If you are currently facing an emergency,
+                use the emergency assessment and SOS system
+                immediately.
+            </p>
+
+        </div>
+
+
+        <a href="/#report"
+           class="dashboard-action-btn">
+
+            🚨 Assess Emergency
+
+        </a>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- ================= RISK ANALYTICS ================= -->
+    <!-- ================================================= -->
+
+    <div class="analytics-section">
+
+
+        <!-- ================= ANALYTICS HEADER ================= -->
+
+        <div class="recent-header">
+
+            <div>
+
+                <p class="dashboard-label">
+                    RISK ANALYTICS
+                </p>
+
+                <h2>
+                    📊 Emergency Risk Distribution
+                </h2>
+
+                <p>
+                    Overview of your emergency assessment
+                    severity levels.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= RISK ANALYTICS GRID ================= -->
+
+        <div class="risk-analytics-grid">
+
+
+            <!-- ================= LOW RISK ================= -->
+
+            <div class="risk-box">
+
+                <div class="risk-box-header">
+
+                    <span>
+                        🟢 Low Risk
+                    </span>
+
+                    <strong>
+                        {{ low_percentage }}%
+                    </strong>
+
+                </div>
+
+
+                <div class="risk-progress">
+
+                    <div class="risk-progress-bar low-progress"
+                         style="width: {{ low_percentage }}%;">
+
+                    </div>
+
+                </div>
+
+
+                <p>
+                    {{ low_count }} report(s)
+                </p>
+
+            </div>
+
+
+
+            <!-- ================= MEDIUM RISK ================= -->
+
+            <div class="risk-box">
+
+                <div class="risk-box-header">
+
+                    <span>
+                        🟡 Medium Risk
+                    </span>
+
+                    <strong>
+                        {{ medium_percentage }}%
+                    </strong>
+
+                </div>
+
+
+                <div class="risk-progress">
+
+                    <div class="risk-progress-bar medium-progress"
+                         style="width: {{ medium_percentage }}%;">
+
+                    </div>
+
+                </div>
+
+
+                <p>
+                    {{ medium_count }} report(s)
+                </p>
+
+            </div>
+
+
+
+            <!-- ================= HIGH RISK ================= -->
+
+            <div class="risk-box">
+
+                <div class="risk-box-header">
+
+                    <span>
+                        🟠 High Risk
+                    </span>
+
+                    <strong>
+                        {{ high_percentage }}%
+                    </strong>
+
+                </div>
+
+
+                <div class="risk-progress">
+
+                    <div class="risk-progress-bar high-progress"
+                         style="width: {{ high_percentage }}%;">
+
+                    </div>
+
+                </div>
+
+
+                <p>
+                    {{ high_count }} report(s)
+                </p>
+
+            </div>
+
+
+
+            <!-- ================= CRITICAL RISK ================= -->
+
+            <div class="risk-box">
+
+                <div class="risk-box-header">
+
+                    <span>
+                        🔴 Critical
+                    </span>
+
+                    <strong>
+                        {{ critical_percentage }}%
+                    </strong>
+
+                </div>
+
+
+                <div class="risk-progress">
+
+                    <div class="risk-progress-bar critical-progress"
+                         style="width: {{ critical_percentage }}%;">
+
+                    </div>
+
+                </div>
+
+
+                <p>
+                    {{ critical_count }} report(s)
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- ============ EMERGENCY CATEGORY ANALYTICS ======= -->
+        <!-- ================================================= -->
+
+        <div class="category-analytics">
+
+
+            <h3>
+                🚨 Emergency Type Distribution
+            </h3>
+
+
+            {% if category_counts %}
+
+
+                {% for category in category_counts %}
+
+
+                <div class="category-row">
+
+
+                    <span>
+
+
+                        {% if category[0] == "accident" %}
+
+                            🚗 Road Accident
+
+
+                        {% elif category[0] == "medical" %}
+
+                            ❤️ Medical Emergency
+
+
+                        {% elif category[0] == "fire" %}
+
+                            🔥 Fire Emergency
+
+
+                        {% elif category[0] == "crime" %}
+
+                            👮 Crime
+
+
+                        {% else %}
+
+                            ⚠️ Other
+
+                        {% endif %}
+
+
+                    </span>
+
+
+                    <strong>
+
+                        {{ category[1] }}
+
+                    </strong>
+
+
+                </div>
+
+
+                {% endfor %}
+
+
+            {% else %}
+
+
+                <p>
+                    No emergency category data available yet.
+                </p>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- ================= RECENT REPORTS ================= -->
+    <!-- ================================================= -->
+
+    <div class="recent-section">
+
+
+        <div class="recent-header">
+
+
+            <div>
+
+                <p class="dashboard-label">
+                    ACTIVITY MONITOR
+                </p>
+
+                <h2>
+                    📋 Recent Emergency Reports
+                </h2>
+
+            </div>
+
+
+            <a href="/emergency-history"
+               class="view-history-btn">
+
+                View Full History →
+
+            </a>
+
+
+        </div>
+
+
+
+        {% if recent_reports %}
+
+
+        <div class="recent-table-wrapper">
+
+
+            <table class="recent-table">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Emergency
+                        </th>
+
+                        <th>
+                            Risk Score
+                        </th>
+
+                        <th>
+                            Severity
+                        </th>
+
+                        <th>
+                            Date & Time
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                    {% for report in recent_reports %}
+
+
+                    <tr>
+
+
+                        <!-- ================= EMERGENCY TYPE ================= -->
+
+                        <td>
+
+
+                            {% if report[0] == "accident" %}
+
+                                🚗 Road Accident
+
+
+                            {% elif report[0] == "medical" %}
+
+                                ❤️ Medical Emergency
+
+
+                            {% elif report[0] == "fire" %}
+
+                                🔥 Fire
+
+
+                            {% elif report[0] == "crime" %}
+
+                                🚨 Crime
+
+
+                            {% else %}
+
+                                ⚠️ Other
+
+                            {% endif %}
+
+
+                        </td>
+
+
+
+                        <!-- ================= RISK SCORE ================= -->
+
+                        <td>
+
+                            <strong>
+
+                                {{ report[1] }}/100
+
+                            </strong>
+
+                        </td>
+
+
+
+                        <!-- ================= SEVERITY ================= -->
+
+                        <td>
+
+
+                            <span class="dashboard-severity
+
+                                {% if report[2] == 'LOW' %}
+
+                                    severity-low
+
+                                {% elif report[2] == 'MEDIUM' %}
+
+                                    severity-medium
+
+                                {% elif report[2] == 'HIGH' %}
+
+                                    severity-high
+
+                                {% else %}
+
+                                    severity-critical
+
+                                {% endif %}">
+
+
+                                {{ report[2] }}
+
+
+                            </span>
+
+
+                        </td>
+
+
+
+                        <!-- ================= DATE & TIME ================= -->
+
+                        <td>
+
+                            {{ report[3] }}
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- ================= EMPTY STATE ================= -->
+
+        <div class="dashboard-empty">
+
+
+            <div>
+                📭
+            </div>
+
+
+            <h3>
+                No Emergency Activity
+            </h3>
+
+
+            <p>
+                Your emergency reports will appear
+                here after completing an assessment.
+            </p>
+
+
+            <a href="/#report">
+
+                Create First Report →
+
+            </a>
+
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- ================= SAFETY FOOTER =================== -->
+    <!-- ================================================= -->
+
+    <div class="dashboard-tip">
+
+
+        <div class="tip-icon">
+            💡
+        </div>
+
+
+        <div>
+
+
+            <h3>
+                Safety Reminder
+            </h3>
+
+
+            <p>
+
+                In a life-threatening emergency,
+                contact the appropriate emergency service
+                immediately. Smart Emergency is designed
+                to assist with assessment and response,
+                not replace professional emergency services.
+
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+
+    <p>
+
+        © 2026 Smart Emergency |
+
+        Intelligent Emergency Response Platform
+
+    </p>
+
+
+</footer>
+
+
+</body>
+
+</html>
