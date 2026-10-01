@@ -162,6 +162,16 @@ def init_db():
 
 
 # =========================================================
+# INITIALIZE DATABASE
+# =========================================================
+# This runs when Flask/Gunicorn starts the application.
+# Required for deployment because Gunicorn does not execute
+# the code inside "if __name__ == '__main__'".
+
+init_db()
+
+
+# =========================================================
 # HOME
 # =========================================================
 
@@ -1195,8 +1205,6 @@ def logout():
 # =========================================================
 
 if __name__ == "__main__":
-
-    init_db()
 
     app.run(
         debug=True
