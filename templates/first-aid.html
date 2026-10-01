@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="Smart Emergency First Aid Guide - Basic first aid information for common emergency situations.">
+
+    <title>Smart Emergency | First Aid Guide</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =====================================================
+           FIRST AID PAGE
+           ===================================================== */
+
+        .first-aid-page {
+            min-height: 100vh;
+            background: #f5f7fa;
+        }
+
+
+        /* =====================================================
+           MAIN CONTENT
+           ===================================================== */
+
+        .first-aid-content {
+            margin-left: 313px;
+            padding: 55px 50px 70px;
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           PAGE HEADER
+           ===================================================== */
+
+        .first-aid-header {
+            text-align: center;
+            max-width: 950px;
+            margin: 0 auto 45px;
+        }
+
+        .first-aid-header .header-icon {
+            font-size: 52px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .first-aid-header h1 {
+            margin: 0 0 18px;
+            font-size: 48px;
+            font-weight: 800;
+            color: #1565c0;
+        }
+
+        .first-aid-header p {
+            margin: 0 auto;
+            max-width: 850px;
+            font-size: 19px;
+            line-height: 1.7;
+            color: #444;
+        }
+
+
+        /* =====================================================
+           EMERGENCY NOTICE
+           ===================================================== */
+
+        .first-aid-notice {
+            max-width: 950px;
+            margin: 0 auto 35px;
+            padding: 18px 22px;
+            border-radius: 16px;
+            background: #fff4e5;
+            border-left: 6px solid #ff9800;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .first-aid-notice strong {
+            display: block;
+            color: #e65100;
+            font-size: 17px;
+            margin-bottom: 6px;
+        }
+
+        .first-aid-notice p {
+            margin: 0;
+            color: #555;
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           FIRST AID CARDS
+           ===================================================== */
+
+        .first-aid-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+
+            display: grid;
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 25px;
+        }
+
+
+        .first-aid-card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+
+            box-shadow:
+                0 8px 30px rgba(0,0,0,0.08);
+
+            border: 1px solid #e7edf5;
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .first-aid-card::before {
+            content: "";
+            position: absolute;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 5px;
+
+            background: #1565c0;
+        }
+
+
+        .first-aid-card:hover {
+            transform: translateY(-6px);
+
+            box-shadow:
+                0 15px 35px rgba(21,101,192,0.15);
+        }
+
+
+        /* =====================================================
+           CARD ICON
+           ===================================================== */
+
+        .first-aid-icon {
+            width: 65px;
+            height: 65px;
+
+            border-radius: 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 32px;
+
+            background: #e3f2fd;
+
+            margin-bottom: 18px;
+        }
+
+
+        .first-aid-card h2 {
+            margin: 0 0 12px;
+
+            font-size: 25px;
+
+            color: #1565c0;
+        }
+
+
+        .first-aid-card p {
+            margin: 0 0 18px;
+
+            color: #555;
+
+            font-size: 15px;
+
+            line-height: 1.65;
+        }
+
+
+        /* =====================================================
+           FIRST AID STEPS
+           ===================================================== */
+
+        .first-aid-card h3 {
+            margin: 15px 0 10px;
+
+            font-size: 16px;
+
+            color: #333;
+        }
+
+
+        .first-aid-steps {
+            margin: 0;
+            padding-left: 22px;
+
+            color: #444;
+
+            line-height: 1.75;
+
+            font-size: 15px;
+        }
+
+
+        .first-aid-steps li {
+            margin-bottom: 7px;
+        }
+
+
+        /* =====================================================
+           IMPORTANT MESSAGE
+           ===================================================== */
+
+        .card-warning {
+            margin-top: 18px;
+            padding: 12px 14px;
+
+            background: #fff8e1;
+
+            border-left: 4px solid #ffb300;
+
+            border-radius: 8px;
+
+            color: #6d4c00;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           EMERGENCY BUTTON
+           ===================================================== */
+
+        .first-aid-emergency {
+            max-width: 1100px;
+
+            margin: 40px auto 0;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1565c0,
+                    #1976d2
+                );
+
+            color: white;
+
+            border-radius: 20px;
+
+            padding: 30px;
+
+            text-align: center;
+
+            box-shadow:
+                0 10px 30px rgba(21,101,192,0.22);
+        }
+
+
+        .first-aid-emergency h2 {
+            margin: 0 0 10px;
+
+            font-size: 27px;
+        }
+
+
+        .first-aid-emergency p {
+            margin: 0 auto 20px;
+
+            max-width: 750px;
+
+            line-height: 1.6;
+
+            color: rgba(255,255,255,0.92);
+        }
+
+
+        .first-aid-call-btn {
+            display: inline-block;
+
+            padding: 13px 25px;
+
+            background: #d32f2f;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 10px;
+
+            font-weight: 700;
+
+            transition: 0.3s ease;
+        }
+
+
+        .first-aid-call-btn:hover {
+            background: #b71c1c;
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =====================================================
+           BACK HOME BUTTON
+           ===================================================== */
+
+        .back-home-wrapper {
+            text-align: center;
+
+            margin-top: 35px;
+        }
+
+
+        .back-home-btn {
+            display: inline-block;
+
+            padding: 12px 24px;
+
+            border-radius: 10px;
+
+            background: white;
+
+            color: #1565c0;
+
+            border: 2px solid #1565c0;
+
+            text-decoration: none;
+
+            font-weight: 700;
+
+            transition: 0.3s ease;
+        }
+
+
+        .back-home-btn:hover {
+            background: #1565c0;
+            color: white;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .first-aid-content {
+                margin-left: 0;
+                padding: 40px 25px 60px;
+            }
+
+            .first-aid-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .first-aid-header h1 {
+                font-size: 38px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .first-aid-content {
+                padding: 30px 16px 50px;
+            }
+
+            .first-aid-header {
+                margin-bottom: 30px;
+            }
+
+            .first-aid-header .header-icon {
+                font-size: 42px;
+            }
+
+            .first-aid-header h1 {
+                font-size: 32px;
+            }
+
+            .first-aid-header p {
+                font-size: 16px;
+            }
+
+            .first-aid-card {
+                padding: 22px;
+            }
+
+            .first-aid-card h2 {
+                font-size: 22px;
+            }
+
+            .first-aid-emergency {
+                padding: 25px 18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="first-aid-page">
+
+
+<!-- =====================================================
+     SIDEBAR / NAVIGATION
+     ===================================================== -->
+
+<nav class="navbar">
+
+    <!-- LOGO -->
+
+    <div class="logo">
+
+        <img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt="Smart Emergency Logo">
+
+        <span>
+            Smart Emergency
+        </span>
+
+    </div>
+
+
+    <!-- NAVIGATION LINKS -->
+
+    <div class="nav-links">
+
+        <a href="/">
+            🏠 Home
+        </a>
+
+        <a href="/#report">
+            🚨 Emergency
+        </a>
+
+        <a href="/#guide">
+            🛡️ Safety Guide
+        </a>
+
+        <a href="/first-aid"
+           class="active">
+            🩹 First Aid
+        </a>
+
+        <a href="/#contacts">
+            📞 Contacts
+        </a>
+
+        <a href="/emergency-history">
+            📋 History
+        </a>
+
+        <a href="/dashboard">
+            📊 Dashboard
+        </a>
+
+
+        {% if session.get('user_name') %}
+
+            <div class="nav-user">
+
+                <span>
+                    👤 {{ session.get('user_name') }}
+                </span>
+
+                <a href="/logout">
+                    Logout
+                </a>
+
+            </div>
+
+        {% else %}
+
+            <a href="/login">
+                🔐 Login
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     MAIN FIRST AID CONTENT
+     ===================================================== -->
+
+<main class="first-aid-content">
+
+
+    <!-- =================================================
+         HEADER
+         ================================================= -->
+
+    <header class="first-aid-header">
+
+        <span class="header-icon">
+            🩹
+        </span>
+
+        <h1>
+            First Aid Guide
+        </h1>
+
+        <p>
+            Learn simple first-aid information for common emergency
+            situations. Stay calm, protect yourself, and get
+            professional emergency help when needed.
+        </p>
+
+    </header>
+
+
+
+    <!-- =================================================
+         IMPORTANT NOTICE
+         ================================================= -->
+
+    <div class="first-aid-notice">
+
+        <strong>
+            ⚠️ Important Safety Notice
+        </strong>
+
+        <p>
+            First aid is basic emergency support and does not replace
+            professional medical care. For serious or life-threatening
+            emergencies, contact emergency services immediately.
+        </p>
+
+    </div>
+
+
+
+    <!-- =================================================
+         FIRST AID CARDS
+         ================================================= -->
+
+    <div class="first-aid-grid">
+
+
+        <!-- =================================================
+             BLEEDING
+             ================================================= -->
+
+        <article class="first-aid-card">
+
+            <div class="first-aid-icon">
+                🩸
+            </div>
+
+            <h2>
+                Bleeding
+            </h2>
+
+            <p>
+                For minor bleeding, basic first aid can help protect
+                the wound while professional help is arranged if needed.
+            </p>
+
+            <h3>
+                Basic steps
+            </h3>
+
+            <ol class="first-aid-steps">
+
+                <li>
+                    Make sure the area is safe before helping.
+                </li>
+
+                <li>
+                    Use clean cloth or gauze to apply gentle,
+                    steady pressure to the wound.
+                </li>
+
+                <li>
+                    Keep the wound covered with a clean dressing.
+                </li>
+
+                <li>
+                    Get medical help if bleeding is heavy,
+                    persistent, or the injury is serious.
+                </li>
+
+            </ol>
+
+            <div class="card-warning">
+                ⚠️ Avoid touching a wound with unclean hands.
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             BURNS
+             ================================================= -->
+
+        <article class="first-aid-card">
+
+            <div class="first-aid-icon">
+                🔥
+            </div>
+
+            <h2>
+                Burns
+            </h2>
+
+            <p>
+                Burns can happen from heat, hot liquids, electricity,
+                chemicals, or other sources.
+            </p>
+
+            <h3>
+                Basic steps
+            </h3>
+
+            <ol class="first-aid-steps">
+
+                <li>
+                    Move away from the source of heat if it is safe.
+                </li>
+
+                <li>
+                    Cool a minor burn with cool running water.
+                </li>
+
+                <li>
+                    Keep the affected area protected with a clean,
+                    non-stick covering.
+                </li>
+
+                <li>
+                    Seek medical attention for serious or extensive burns.
+                </li>
+
+            </ol>
+
+            <div class="card-warning">
+                ⚠️ Do not apply household substances such as toothpaste
+                or butter to a burn.
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             FRACTURE / INJURY
+             ================================================= -->
+
+        <article class="first-aid-card">
+
+            <div class="first-aid-icon">
+                🦴
+            </div>
+
+            <h2>
+                Fracture / Injury
+            </h2>
+
+            <p>
+                A suspected fracture or serious injury should be handled
+                carefully to avoid making the injury worse.
+            </p>
+
+            <h3>
+                Basic steps
+            </h3>
+
+            <ol class="first-aid-steps">
+
+                <li>
+                    Keep the injured person as still and comfortable
+                    as possible.
+                </li>
+
+                <li>
+                    Avoid unnecessary movement of the injured area.
+                </li>
+
+                <li>
+                    Do not try to straighten a visibly injured limb.
+                </li>
+
+                <li>
+                    Seek professional medical assistance.
+                </li>
+
+            </ol>
+
+            <div class="card-warning">
+                ⚠️ Do not attempt to push a bone or joint back into place.
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             FAINTING
+             ================================================= -->
+
+        <article class="first-aid-card">
+
+            <div class="first-aid-icon">
+                😵
+            </div>
+
+            <h2>
+                Fainting
+            </h2>
+
+            <p>
+                If someone faints, make sure the surrounding area is safe
+                and check whether they respond normally.
+            </p>
+
+            <h3>
+                Basic steps
+            </h3>
+
+            <ol class="first-aid-steps">
+
+                <li>
+                    Make sure the person is in a safe position.
+                </li>
+
+                <li>
+                    Check whether they respond and are breathing normally.
+                </li>
+
+                <li>
+                    Give them space and keep the surroundings calm.
+                </li>
+
+                <li>
+                    Seek emergency help if they do not recover normally
+                    or have other concerning symptoms.
+                </li>
+
+            </ol>
+
+            <div class="card-warning">
+                ⚠️ Do not give food or drink to someone who is unconscious.
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             CHOKING
+             ================================================= -->
+
+        <article class="first-aid-card">
+
+            <div class="first-aid-icon">
+                😮
+            </div>
+
+            <h2>
+                Choking
+            </h2>
+
+            <p>
+                Choking can block a person's airway and may become
+                life-threatening very quickly.
+            </p>
+
+            <h3>
+                Basic steps
+            </h3>
+
+            <ol class="first-aid-steps">
+
+                <li>
+                    Encourage the person to cough if they can breathe
+                    and cough effectively.
+                </li>
+
+                <li>
+                    If they cannot breathe or speak, get emergency help
+                    immediately.
+                </li>
+
+                <li>
+                    Follow the emergency operator's instructions while
+                    waiting for help.
+                </li>
+
+                <li>
+                    Stay with the person and monitor their condition.
+                </li>
+
+            </ol>
+
+            <div class="card-warning">
+                ⚠️ Severe choking requires immediate emergency assistance.
+            </div>
+
+        </article>
+
+
+
+        <!-- =================================================
+             ELECTRIC SHOCK
+             ================================================= -->
+
+        <article class="first-aid-card">
+
+            <div class="first-aid-icon">
+                ⚡
+            </div>
+
+            <h2>
+                Electric Shock
+            </h2>
+
+            <p>
+                Electrical accidents can be dangerous even when there
+                are no obvious injuries.
+            </p>
+
+            <h3>
+                Basic steps
+            </h3>
+
+            <ol class="first-aid-steps">
+
+                <li>
+                    Do not touch the person while they may still be
+                    connected to the electrical source.
+                </li>
+
+                <li>
+                    Make sure the power source has been safely switched
+                    off before approaching.
+                </li>
+
+                <li>
+                    Contact emergency services for significant
+                    electrical injuries.
+                </li>
+
+                <li>
+                    Keep the person safe and monitor them while waiting
+                    for professional help.
+                </li>
+
+            </ol>
+
+            <div class="card-warning">
+                ⚠️ Never put yourself at risk by approaching an active
+                electrical source.
+            </div>
+
+        </article>
+
+    </div>
+
+
+
+    <!-- =================================================
+         EMERGENCY HELP
+         ================================================= -->
+
+    <section class="first-aid-emergency">
+
+        <h2>
+            🚨 Need Immediate Emergency Help?
+        </h2>
+
+        <p>
+            If the situation is serious or life-threatening,
+            contact emergency services immediately instead of relying
+            only on first-aid information.
+        </p>
+
+        <a href="tel:112"
+           class="first-aid-call-btn">
+
+            📞 Call Emergency 112
+
+        </a>
+
+    </section>
+
+
+
+    <!-- =================================================
+         BACK TO HOME
+         ================================================= -->
+
+    <div class="back-home-wrapper">
+
+        <a href="/"
+           class="back-home-btn">
+
+            ← Back to Smart Emergency
+
+        </a>
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>

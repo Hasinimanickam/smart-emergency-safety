@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,6 +13,9 @@
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
@@ -472,6 +476,42 @@
 
 
         <!-- ================================================= -->
+        <!-- ================= ROUND CHART ==================== -->
+        <!-- ================================================= -->
+
+        <div class="risk-chart-card">
+
+
+            <div class="chart-heading">
+
+                <p class="dashboard-label">
+                    VISUAL ANALYTICS
+                </p>
+
+                <h3>
+                    🍩 Risk Distribution
+                </h3>
+
+                <p>
+                    Visual representation of your emergency
+                    severity levels.
+                </p>
+
+            </div>
+
+
+            <div class="chart-container">
+
+                <canvas id="riskChart"></canvas>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
         <!-- ============ EMERGENCY CATEGORY ANALYTICS ======= -->
         <!-- ================================================= -->
 
@@ -842,6 +882,138 @@
 
 
 </footer>
+
+
+
+<!-- ================================================= -->
+<!-- ================= CHART SCRIPT ================== -->
+<!-- ================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const chartCanvas = document.getElementById("riskChart");
+
+    if (!chartCanvas) {
+        return;
+    }
+
+
+    new Chart(chartCanvas, {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: [
+                "Low Risk",
+                "Medium Risk",
+                "High Risk",
+                "Critical"
+            ],
+
+            datasets: [{
+
+                data: [
+                    {{ low_count }},
+                    {{ medium_count }},
+                    {{ high_count }},
+                    {{ critical_count }}
+                ],
+
+                backgroundColor: [
+                    "#28a745",
+                    "#ffc107",
+                    "#fd7e14",
+                    "#dc3545"
+                ],
+
+                borderColor: "#ffffff",
+
+                borderWidth: 4,
+
+                hoverOffset: 12
+
+            }]
+
+        },
+
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            cutout: "65%",
+
+
+            animation: {
+
+                animateRotate: true,
+
+                animateScale: true,
+
+                duration: 1500
+
+            },
+
+
+            plugins: {
+
+                legend: {
+
+                    position: "bottom",
+
+                    labels: {
+
+                        padding: 18,
+
+                        usePointStyle: true,
+
+                        pointStyle: "circle",
+
+                        font: {
+
+                            size: 13
+
+                        }
+
+                    }
+
+                },
+
+
+                tooltip: {
+
+                    callbacks: {
+
+                        label: function (context) {
+
+                            const value = context.raw;
+
+                            return " " +
+                                   context.label +
+                                   ": " +
+                                   value +
+                                   " report(s)";
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    });
+
+});
+
+</script>
 
 
 </body>

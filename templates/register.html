@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,6 +9,9 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
+    <meta name="description"
+          content="Smart Emergency - Create your account and stay prepared during emergency situations.">
+
     <title>Smart Emergency - Register</title>
 
     <link rel="stylesheet"
@@ -16,124 +19,461 @@
 
 </head>
 
-<body class="login-page">
+
+<body class="login-page register-page">
+
+
+    <!-- ================= DECORATIVE PROJECT ICONS ================= -->
+
+    <div class="register-decoration decoration-one">
+        🚑
+    </div>
+
+    <div class="register-decoration decoration-two">
+        🏥
+    </div>
+
+    <div class="register-decoration decoration-three">
+        ❤️
+    </div>
+
+    <div class="register-decoration decoration-four">
+        🛡️
+    </div>
+
+    <div class="register-decoration decoration-five">
+        📍
+    </div>
+
+
+    <!-- ================= MAIN CONTAINER ================= -->
 
     <div class="login-container">
 
-        <div class="login-card">
+
+        <!-- ================= REGISTER CARD ================= -->
+
+        <div class="login-card register-card">
+
+
+            <!-- ================= PROJECT LOGO ================= -->
+
+            <div class="register-logo-section">
+
+                <img src="{{ url_for('static', filename='images/logo.png') }}"
+                     alt="Smart Emergency Logo"
+                     class="register-logo">
+
+                <h2 class="register-brand">
+                    SMART EMERGENCY
+                </h2>
+
+                <p class="register-slogan">
+                    Your Safety. Our Priority.
+                </p>
+
+            </div>
+
 
             <!-- Emergency Icon -->
-            <div class="login-icon">
+
+            <div class="login-icon register-icon">
                 🚨
             </div>
 
+
+            <!-- Small Project Label -->
+
+            <div class="register-label">
+                🛡️ SMART EMERGENCY
+            </div>
+
+
             <!-- Title -->
-            <h1>Create Account</h1>
+
+            <h1>
+                Create Account
+            </h1>
+
+
+            <!-- Subtitle -->
 
             <p class="login-subtitle">
                 Join Smart Emergency
             </p>
 
+            <p class="register-welcome">
+                Create your account and stay prepared
+                during emergency situations.
+            </p>
 
-            <!-- Register Form -->
-            <form action="/register" method="POST">
+
+            <!-- ================= REGISTER FORM ================= -->
+
+            <form action="/register"
+                  method="POST"
+                  onsubmit="return validateRegisterForm()">
+
 
                 <!-- Full Name -->
+
                 <div class="input-group">
 
                     <label for="name">
-                        Full Name
+                        👤 Full Name
                     </label>
 
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        placeholder="Enter your full name"
-                        required>
+                    <div class="register-input-wrapper">
+
+                        <span class="input-icon">
+                            👤
+                        </span>
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
+                            required>
+
+                    </div>
 
                 </div>
 
 
                 <!-- Email -->
+
                 <div class="input-group">
 
                     <label for="email">
-                        Email
+                        📧 Email Address
                     </label>
 
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Enter your email"
-                        required>
+                    <div class="register-input-wrapper">
+
+                        <span class="input-icon">
+                            📧
+                        </span>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required>
+
+                    </div>
 
                 </div>
 
 
                 <!-- Password -->
+
                 <div class="input-group">
 
                     <label for="password">
-                        Password
+                        🔐 Password
                     </label>
 
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Create a password"
-                        required>
+                    <div class="password-wrapper register-password-wrapper">
+
+                        <span class="input-icon">
+                            🔐
+                        </span>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Create a password"
+                            autocomplete="new-password"
+                            required>
+
+                        <button
+                            type="button"
+                            class="show-password"
+                            onclick="togglePassword('password', this)"
+                            aria-label="Show password">
+
+                            👁️
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- Password Hint -->
+
+                    <p class="password-hint">
+                        🔹 Use at least 6 characters for better security.
+                    </p>
 
                 </div>
 
 
                 <!-- Confirm Password -->
+
                 <div class="input-group">
 
                     <label for="confirm_password">
-                        Confirm Password
+                        🔒 Confirm Password
                     </label>
 
-                    <input
-                        type="password"
-                        id="confirm_password"
-                        name="confirm_password"
-                        placeholder="Confirm your password"
-                        required>
+                    <div class="password-wrapper register-password-wrapper">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                        <input
+                            type="password"
+                            id="confirm_password"
+                            name="confirm_password"
+                            placeholder="Confirm your password"
+                            autocomplete="new-password"
+                            required>
+
+                        <button
+                            type="button"
+                            class="show-password"
+                            onclick="togglePassword('confirm_password', this)"
+                            aria-label="Show password">
+
+                            👁️
+
+                        </button>
+
+                    </div>
 
                 </div>
 
 
-                <!-- Create Account Button -->
+                <!-- Password Error -->
+
+                <p id="passwordError"
+                   class="password-error">
+                </p>
+
+
+                <!-- ================= CREATE ACCOUNT BUTTON ================= -->
+
                 <button
                     type="submit"
-                    class="login-btn">
+                    class="login-btn register-submit-btn">
 
                     📝 Create Account
 
                 </button>
 
+
             </form>
 
 
-            <!-- Login Link -->
-            <p class="login-footer">
+            <!-- ================= SAFETY MESSAGE ================= -->
 
-                Already have an account?
+            <div class="login-safety-message register-safety">
 
-                <a href="/login">
-                    Login
+                <span class="safety-icon">
+                    🛡️
+                </span>
+
+                <div>
+
+                    <strong>
+                        Your Safety Matters
+                    </strong>
+
+                    <p>
+                        Smart Emergency helps you stay prepared
+                        when you need help.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= DIVIDER ================= -->
+
+            <div class="login-divider">
+
+                <span>OR</span>
+
+            </div>
+
+
+            <!-- ================= LOGIN SECTION ================= -->
+
+            <div class="register-section">
+
+                <p>
+                    Already have an account?
+                </p>
+
+                <a href="/login"
+                   class="register-btn">
+
+                    🔑 Login to Your Account
+
                 </a>
 
-            </p>
+            </div>
+
+
+            <!-- ================= PROJECT FEATURES ================= -->
+
+            <div class="register-features">
+
+                <div class="register-feature">
+
+                    <span>🚨</span>
+
+                    <small>
+                        SOS
+                    </small>
+
+                </div>
+
+
+                <div class="register-feature">
+
+                    <span>📍</span>
+
+                    <small>
+                        Location
+                    </small>
+
+                </div>
+
+
+                <div class="register-feature">
+
+                    <span>📞</span>
+
+                    <small>
+                        Contacts
+                    </small>
+
+                </div>
+
+
+                <div class="register-feature">
+
+                    <span>🛡️</span>
+
+                    <small>
+                        Safety
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= SLOGAN ================= -->
+
+            <div class="register-bottom-slogan">
+
+                <span>
+                    🛡️
+                </span>
+
+                <p>
+                    Stay Alert. Stay Safe. Stay Prepared.
+                </p>
+
+            </div>
+
+
+            <!-- ================= BACK HOME ================= -->
+
+            <a href="/"
+               class="back-home">
+
+                ← Back to Home
+
+            </a>
+
 
         </div>
 
     </div>
 
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        // Show / Hide Password
+
+        function togglePassword(inputId, button) {
+
+            const input =
+                document.getElementById(inputId);
+
+            if (input.type === "password") {
+
+                input.type = "text";
+
+                button.textContent = "🙈";
+
+            } else {
+
+                input.type = "password";
+
+                button.textContent = "👁️";
+
+            }
+
+        }
+
+
+        // Password Validation
+
+        function validateRegisterForm() {
+
+            const password =
+                document.getElementById("password").value;
+
+            const confirmPassword =
+                document.getElementById("confirm_password").value;
+
+            const errorMessage =
+                document.getElementById("passwordError");
+
+
+            if (password.length < 6) {
+
+                errorMessage.textContent =
+                    "⚠️ Password must contain at least 6 characters.";
+
+                return false;
+
+            }
+
+
+            if (password !== confirmPassword) {
+
+                errorMessage.textContent =
+                    "⚠️ Passwords do not match.";
+
+                return false;
+
+            }
+
+
+            errorMessage.textContent = "";
+
+            return true;
+
+        }
+
+    </script>
+
+
 </body>
 
 </html>
-```
+

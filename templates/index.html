@@ -8,164 +8,238 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Smart Emergency</title>
+    <meta name="description"
+          content="Smart Emergency - Your intelligent safety assistant for emergency assistance, location detection and safety guidance.">
+
+    <title>Smart Emergency | Safety Assistant</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
-
 <body>
 
+<!-- ================================================= -->
+<!-- ================= NAVIGATION ==================== -->
+<!-- ================================================= -->
 
-    <!-- ================= NAVIGATION ================= -->
+<nav class="navbar">
 
-    <nav class="navbar">
+    <div class="logo">
 
-        <div class="logo">
-            🚨 Smart Emergency
-        </div>
+        <img src="{{ url_for('static', filename='images/logo.png') }}"
+             alt="Smart Emergency Logo">
 
+        <span>Smart Emergency</span>
 
-        <div class="nav-links">
-
-            <a href="#home">
-                Home
-            </a>
-
-
-            <a href="#report">
-                Emergency
-            </a>
+    </div>
 
 
-            <a href="#guide">
-                Safety Guide
-            </a>
+    <div class="nav-links">
+
+        <a href="#home">
+            Home
+        </a>
+
+        <a href="#report">
+            Emergency
+        </a>
+
+        <a href="#guide">
+            Safety Guide
+        </a>
 
 
-            <a href="/emergency-history">
-                📋 History
-            </a>
+        <!-- ================= FIRST AID ================= -->
+
+        <a href="{{ url_for('first_aid') }}"
+           class="first-aid-nav">
+
+            🩹 First Aid
+
+        </a>
 
 
-            <a href="/dashboard">
-                📊 Dashboard
-            </a>
+        <a href="#contacts">
+            📞 Contacts
+        </a>
+
+        <a href="/emergency-history">
+            📋 History
+        </a>
+
+        <a href="/dashboard">
+            📊 Dashboard
+        </a>
 
 
-            {% if session.get('user_name') %}
+        {% if session.get('user_name') %}
 
-                <div class="nav-user">
+            <div class="nav-user">
 
+                <span>
                     👤 {{ session.get('user_name') }}
+                </span>
+
+                <a href="/logout">
+                    Logout
+                </a>
+
+            </div>
+
+        {% else %}
+
+            <a href="/login">
+                🔐 Login
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
 
 
-                    <a href="/logout">
-                        Logout
-                    </a>
+<!-- ================================================= -->
+<!-- ================= HOME SECTION ================== -->
+<!-- ================================================= -->
 
-                </div>
+<section id="home"
+         class="hero">
 
-            {% endif %}
+    <div class="hero-content">
 
+        <div class="hero-badge">
+            🛡️ Your Safety. Our Priority.
         </div>
 
-    </nav>
+        <h1>
+            Smart Emergency
+            <span>
+                Safety Assistant
+            </span>
+        </h1>
+
+        <p class="hero-description">
+
+            Get quick emergency assistance, detect your location,
+            assess emergency risks, and access essential safety
+            guidance — all in one place.
+
+        </p>
 
 
-
-    <!-- ================= HOME SECTION ================= -->
-
-    <section id="home" class="hero">
-
-        <div class="hero-content">
-
-            <h1>
-                🚨 Smart Emergency
-            </h1>
-
-
-            <p>
-                Your intelligent safety companion during emergencies.
-            </p>
-
+        <div class="hero-actions">
 
             <button class="sos-btn"
-                    onclick="emergencySOS()">
+                    type="button"
+                    onclick="emergencySOS()"
+                    aria-label="Activate Emergency SOS">
 
-                🚨 EMERGENCY SOS
+                <span class="sos-icon-small">
+                    🚨
+                </span>
+
+                <span>
+
+                    EMERGENCY SOS
+
+                    <small>
+                        Get immediate assistance
+                    </small>
+
+                </span>
 
             </button>
 
 
-            <p class="small-text">
-                Press the button during an emergency
-            </p>
+            <a href="#report"
+               class="hero-secondary-btn">
+
+                🤖 Assess Emergency
+
+            </a>
 
         </div>
 
-    </section>
+
+        <p class="hero-note">
+
+            ⚡ Quick response
+            &nbsp; • &nbsp;
+
+            📍 Location assistance
+            &nbsp; • &nbsp;
+
+            🛡️ Safety guidance
+
+        </p>
+
+    </div>
 
 
+    <!-- ================================================= -->
+    <!-- ================= HERO IMAGE ==================== -->
+    <!-- ================================================= -->
 
-    <!-- ================= EMERGENCY SOS POPUP ================= -->
+    <div class="hero-visual">
 
-    <div id="sosModal"
-         class="sos-modal">
+        <div class="hero-circle">
+
+            <div class="hero-image-wrap">
+
+                <img
+                    src="{{ url_for('static', filename='images/safety-assistant.jpg') }}"
+                    alt="Smart Emergency Safety Assistant"
+                    class="hero-main-image"
+                    loading="eager">
+
+            </div>
+
+        </div>
 
 
-        <div class="sos-modal-content">
+        <!-- LOCATION FLOATING CARD -->
 
+        <div class="floating-card location-card">
 
-            <span class="close-btn"
-                  onclick="closeSOSModal()">
-
-                &times;
-
+            <span>
+                📍
             </span>
 
+            <div>
 
-            <div class="sos-icon">
-                🚨
-            </div>
+                <strong>
+                    Location
+                </strong>
 
-
-            <h2>
-                Emergency SOS Activated
-            </h2>
-
-
-            <p>
-                Your emergency assistance has been activated.
-            </p>
-
-
-            <div id="sosLocation">
-
-                📍 Detecting your location...
+                <span>
+                    Ready to detect
+                </span>
 
             </div>
 
-
-            <div class="sos-actions">
-
-
-                <a href="tel:112"
-                   class="call-btn">
-
-                    📞 Call Emergency 112
-
-                </a>
+        </div>
 
 
-                <button class="map-btn"
-                        onclick="openEmergencyLocation()">
+        <!-- SAFETY FLOATING CARD -->
 
-                    🗺️ Open Location
+        <div class="floating-card safety-card">
 
-                </button>
+            <span>
+                🛡️
+            </span>
+
+            <div>
+
+                <strong>
+                    Safety
+                </strong>
+
+                <span>
+                    24/7 assistance
+                </span>
 
             </div>
 
@@ -173,153 +247,238 @@
 
     </div>
 
+</section>
 
 
-    <!-- ================= EMERGENCY REPORT ================= -->
+<!-- ================================================= -->
+<!-- ================= SOS MODAL ===================== -->
+<!-- ================================================= -->
 
-    <section id="report"
-             class="section">
+<div id="sosModal"
+     class="sos-modal"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="sosTitle">
+
+    <div class="sos-modal-content">
+
+        <button type="button"
+                class="close-btn"
+                onclick="closeSOSModal()"
+                aria-label="Close emergency popup">
+
+            &times;
+
+        </button>
 
 
-        <h2>
-            🚨 Emergency Report
+        <div class="sos-icon">
+            🚨
+        </div>
+
+
+        <h2 id="sosTitle">
+            Emergency SOS Activated
         </h2>
 
 
-        <form id="emergencyForm">
+        <p>
+            Your emergency assistance has been activated.
+        </p>
 
 
-            <label>
-                Emergency Type
+        <div id="sosLocation"
+             class="sos-location">
+
+            📍 Detecting your location...
+
+        </div>
+
+
+        <div class="sos-actions">
+
+            <a href="tel:112"
+               class="call-btn">
+
+                📞 Call Emergency 112
+
+            </a>
+
+
+            <button type="button"
+                    class="map-btn"
+                    onclick="openEmergencyLocation()">
+
+                🗺️ Open Location
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- =============== EMERGENCY REPORT ================ -->
+<!-- ================================================= -->
+
+<section id="report"
+         class="section emergency-section">
+
+    <div class="section-heading">
+
+        <span class="section-icon">
+            🚨
+        </span>
+
+        <h2>
+            Emergency Assessment
+        </h2>
+
+        <p>
+            Provide a few details to estimate the emergency risk level.
+        </p>
+
+    </div>
+
+
+    <form id="emergencyForm"
+          class="emergency-form">
+
+
+        <!-- EMERGENCY TYPE -->
+
+        <div class="form-group">
+
+            <label for="emergencyType">
+                🚨 Emergency Type
             </label>
-
 
             <select id="emergencyType"
                     required>
-
 
                 <option value="">
                     Select Emergency
                 </option>
 
-
                 <option value="accident">
                     🚗 Road Accident
                 </option>
-
 
                 <option value="medical">
                     ❤️ Medical Emergency
                 </option>
 
-
                 <option value="fire">
                     🔥 Fire
                 </option>
 
-
                 <option value="crime">
-                    🚨 Crime
+                    👮 Crime
                 </option>
-
 
                 <option value="other">
                     ⚠️ Other
                 </option>
 
-
             </select>
 
+        </div>
 
 
-            <label>
-                Are you injured?
+        <!-- INJURED -->
+
+        <div class="form-group">
+
+            <label for="injured">
+                🩹 Is anyone injured?
             </label>
-
 
             <select id="injured"
                     required>
 
-
                 <option value="">
                     Select
                 </option>
-
 
                 <option value="yes">
                     Yes
                 </option>
 
-
                 <option value="no">
                     No
                 </option>
 
-
             </select>
 
+        </div>
 
 
-            <label>
-                Is there bleeding?
+        <!-- BLEEDING -->
+
+        <div class="form-group">
+
+            <label for="bleeding">
+                🩸 Is there bleeding?
             </label>
-
 
             <select id="bleeding"
                     required>
 
-
                 <option value="">
                     Select
                 </option>
-
 
                 <option value="yes">
                     Yes
                 </option>
 
-
                 <option value="no">
                     No
                 </option>
 
-
             </select>
 
+        </div>
 
 
-            <label>
-                Difficulty in breathing?
+        <!-- BREATHING -->
+
+        <div class="form-group">
+
+            <label for="breathing">
+                🫁 Difficulty in breathing?
             </label>
-
 
             <select id="breathing"
                     required>
 
-
                 <option value="">
                     Select
                 </option>
-
 
                 <option value="yes">
                     Yes
                 </option>
 
-
                 <option value="no">
                     No
                 </option>
 
-
             </select>
 
+        </div>
 
 
-            <label>
-                Number of people affected
+        <!-- PEOPLE -->
+
+        <div class="form-group">
+
+            <label for="people">
+                👥 Number of people affected
             </label>
-
 
             <input type="number"
                    id="people"
@@ -328,774 +487,1652 @@
                    value="1"
                    required>
 
-
-
-            <button type="button"
-                    onclick="assessEmergency()">
-
-                🤖 Assess Emergency
-
-            </button>
-
-
-        </form>
-
-
-        <div id="assessmentResult"
-             class="assessment-result">
+            <small>
+                Enter a number between 1 and 20.
+            </small>
 
         </div>
 
-    </section>
+
+        <button type="button"
+                class="assessment-btn"
+                onclick="assessEmergency()">
+
+            🤖 Assess Emergency
+
+        </button>
+
+    </form>
 
 
+    <div id="assessmentResult"
+         class="assessment-result"
+         aria-live="polite">
+    </div>
 
-    <!-- ================= SAFETY GUIDE ================= -->
+</section>
 
-    <section id="guide"
-             class="section">
 
+<!-- ================================================= -->
+<!-- ================= SAFETY GUIDE ================== -->
+<!-- ================================================= -->
+
+<section id="guide"
+         class="section safety-section">
+
+    <div class="section-heading">
+
+        <span class="section-icon">
+            🛡️
+        </span>
 
         <h2>
-            🛡️ Safety Guide
+            Safety Guide
         </h2>
 
+        <p>
+            Follow these basic safety steps while waiting for assistance.
+        </p>
 
+    </div>
+
+
+    <div class="guide-container">
+
+
+        <!-- ROAD ACCIDENT -->
 
         <div class="guide-card">
 
+            <img
+                src="{{ url_for('static', filename='images/road-accident.jpg') }}"
+                alt="Road Accident Safety"
+                class="guide-image"
+                loading="lazy">
+
+            <div class="guide-icon">
+                🚗
+            </div>
 
             <h3>
-                🚗 Road Accident
+                Road Accident
             </h3>
 
-
             <p>
-                Move to a safe location and contact emergency services.
+                Move to a safe location, avoid further traffic danger,
+                and contact emergency services.
             </p>
 
         </div>
 
 
+        <!-- FIRE -->
 
         <div class="guide-card">
 
+            <img
+                src="{{ url_for('static', filename='images/fire-emergency.jpg') }}"
+                alt="Fire Emergency Safety"
+                class="guide-image"
+                loading="lazy">
+
+            <div class="guide-icon">
+                🔥
+            </div>
 
             <h3>
-                🔥 Fire Emergency
+                Fire Emergency
             </h3>
 
-
             <p>
-                Move away from the fire and avoid using elevators.
+                Move away from the fire, avoid smoke exposure,
+                and do not use elevators.
             </p>
 
         </div>
 
 
+        <!-- MEDICAL -->
 
         <div class="guide-card">
 
+            <img
+                src="{{ url_for('static', filename='images/medical-emergency.jpg') }}"
+                alt="Medical Emergency"
+                class="guide-image"
+                loading="lazy">
+
+            <div class="guide-icon">
+                ❤️
+            </div>
 
             <h3>
-                ❤️ Medical Emergency
+                Medical Emergency
             </h3>
-
 
             <p>
                 Seek immediate medical assistance and stay calm.
+                Avoid unnecessary movement if serious injury is suspected.
             </p>
 
         </div>
 
-    </section>
 
+        <!-- CRIME -->
 
+        <div class="guide-card">
 
-    <!-- ================= EMERGENCY CONTACTS ================= -->
+            <img
+                src="{{ url_for('static', filename='images/crime-emergency.jpg') }}"
+                alt="Crime Emergency Safety"
+                class="guide-image"
+                loading="lazy">
 
-    <section id="contacts"
-             class="section contacts-section">
-
-
-        <h2>
-            📞 Emergency Contacts
-        </h2>
-
-
-        <div class="contact-container">
-
-
-            <div class="contact-card">
-
-
-                <h3>
-                    🚨 Emergency
-                </h3>
-
-
-                <p>
-                    For immediate emergency assistance
-                </p>
-
-
-                <a href="tel:112">
-                    Call 112
-                </a>
-
+            <div class="guide-icon">
+                👮
             </div>
 
+            <h3>
+                Crime Emergency
+            </h3>
 
-
-            <div class="contact-card">
-
-
-                <h3>
-                    🚑 Ambulance
-                </h3>
-
-
-                <p>
-                    For medical emergencies
-                </p>
-
-
-                <a href="tel:108">
-                    Call 108
-                </a>
-
-            </div>
-
-
-
-            <div class="contact-card">
-
-
-                <h3>
-                    🔥 Fire Service
-                </h3>
-
-
-                <p>
-                    For fire emergencies
-                </p>
-
-
-                <a href="tel:101">
-                    Call 101
-                </a>
-
-            </div>
-
-
-
-            <div class="contact-card">
-
-
-                <h3>
-                    👮 Police
-                </h3>
-
-
-                <p>
-                    For police assistance
-                </p>
-
-
-                <a href="tel:100">
-                    Call 100
-                </a>
-
-            </div>
-
+            <p>
+                Move to a safe location and contact the police
+                or emergency services.
+            </p>
 
         </div>
 
-    </section>
+    </div>
+
+</section>
 
 
+<!-- ================================================= -->
+<!-- =============== EMERGENCY CONTACTS ============== -->
+<!-- ================================================= -->
 
-    <!-- ================= JAVASCRIPT ================= -->
+<section id="contacts"
+         class="section contacts-section">
 
-    <script>
+    <div class="section-heading">
 
+        <span class="section-icon">
+            📞
+        </span>
 
-        let emergencyLatitude = null;
+        <h2>
+            Emergency Contacts
+        </h2>
 
-        let emergencyLongitude = null;
+        <p>
+            Use the appropriate emergency service when immediate help is required.
+        </p>
 
-
-
-        // ================= SOS FUNCTION =================
-
-        function emergencySOS() {
-
-
-            document.getElementById("sosModal").style.display =
-                "flex";
-
-
-            document.getElementById("sosLocation").innerHTML =
-                "📍 Detecting your location...";
-
-
-            if (!navigator.geolocation) {
+    </div>
 
 
-                document.getElementById("sosLocation").innerHTML =
-                    "❌ Geolocation is not supported by your browser.";
+    <div class="contact-container">
 
 
-                return;
+        <!-- 112 -->
+
+        <div class="contact-card">
+
+            <img
+                src="{{ url_for('static', filename='images/emergency-112.jpg') }}"
+                alt="Emergency 112"
+                class="contact-image"
+                loading="lazy">
+
+            <div class="contact-icon">
+                🚨
+            </div>
+
+            <h3>
+                Emergency
+            </h3>
+
+            <p>
+                For immediate emergency assistance
+            </p>
+
+            <a href="tel:112"
+               class="contact-call-btn">
+
+                Call 112
+
+            </a>
+
+        </div>
+
+
+        <!-- AMBULANCE -->
+
+        <div class="contact-card">
+
+            <img
+                src="{{ url_for('static', filename='images/ambulance.jpg') }}"
+                alt="Ambulance Emergency Service"
+                class="contact-image"
+                loading="lazy">
+
+            <div class="contact-icon">
+                🚑
+            </div>
+
+            <h3>
+                Ambulance
+            </h3>
+
+            <p>
+                For medical emergencies
+            </p>
+
+            <a href="tel:108"
+               class="contact-call-btn">
+
+                Call 108
+
+            </a>
+
+        </div>
+
+
+        <!-- FIRE SERVICE -->
+
+        <div class="contact-card">
+
+            <img
+                src="{{ url_for('static', filename='images/fire-emergency.jpg') }}"
+                alt="Fire Service"
+                class="contact-image"
+                loading="lazy">
+
+            <div class="contact-icon">
+                🔥
+            </div>
+
+            <h3>
+                Fire Service
+            </h3>
+
+            <p>
+                For fire emergencies
+            </p>
+
+            <a href="tel:101"
+               class="contact-call-btn">
+
+                Call 101
+
+            </a>
+
+        </div>
+
+
+        <!-- POLICE -->
+
+        <div class="contact-card">
+
+            <img
+                src="{{ url_for('static', filename='images/police.jpg') }}"
+                alt="Police Emergency Service"
+                class="contact-image"
+                loading="lazy">
+
+            <div class="contact-icon">
+                👮
+            </div>
+
+            <h3>
+                Police
+            </h3>
+
+            <p>
+                For police assistance
+            </p>
+
+            <a href="tel:100"
+               class="contact-call-btn">
+
+                Call 100
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ============ MY EMERGENCY CONTACTS ============== -->
+    <!-- ================================================= -->
+
+    <div class="my-contacts-section">
+
+        <div class="section-heading">
+
+            <span class="section-icon">
+                👥
+            </span>
+
+            <h2>
+                My Emergency Contacts
+            </h2>
+
+            <p>
+                Add trusted contacts who can be reached during an emergency.
+            </p>
+
+        </div>
+
+
+        <div class="contact-form-card">
+
+            <form id="contactForm">
+
+                <div class="form-group">
+
+                    <label for="contactName">
+                        👤 Contact Name
+                    </label>
+
+                    <input type="text"
+                           id="contactName"
+                           placeholder="Enter contact name"
+                           required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="contactPhone">
+                        📱 Phone Number
+                    </label>
+
+                    <input type="tel"
+                           id="contactPhone"
+                           placeholder="Enter phone number"
+                           required>
+
+                </div>
+
+
+                <button type="submit"
+                        class="assessment-btn">
+
+                    ➕ Add Emergency Contact
+
+                </button>
+
+            </form>
+
+
+            <div id="contactMessage"
+                 aria-live="polite">
+            </div>
+
+        </div>
+
+
+        <div class="saved-contacts-container">
+
+            <h3>
+                📋 Saved Contacts
+            </h3>
+
+            <div id="savedContacts">
+
+                <p>
+                    Loading contacts...
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================================================= -->
+<!-- ================= FOOTER ======================== -->
+<!-- ================================================= -->
+
+<footer class="footer">
+
+    <div class="footer-content">
+
+        <h3>
+            🚨 Smart Emergency
+        </h3>
+
+        <p>
+            A safety-focused web application designed to provide
+            quick access to emergency assistance and guidance.
+        </p>
+
+
+        <div class="footer-links">
+
+            <a href="#home">
+                Home
+            </a>
+
+            <a href="#report">
+                Emergency
+            </a>
+
+            <a href="#guide">
+                Safety Guide
+            </a>
+
+
+            <!-- ================= FIRST AID ================= -->
+
+            <a href="{{ url_for('first_aid') }}"
+               class="first-aid-nav">
+
+                🩹 First Aid
+
+            </a>
+
+
+            <a href="#contacts">
+                Contacts
+            </a>
+
+        </div>
+
+
+        <p class="footer-bottom">
+            © 2026 Smart Emergency. All rights reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+<!-- ================================================= -->
+<!-- ================= JAVASCRIPT ==================== -->
+<!-- ================================================= -->
+
+<script>
+
+let emergencyLatitude = null;
+let emergencyLongitude = null;
+
+
+/* ================================================= */
+/* ================= EMERGENCY SOS ================== */
+/* ================================================= */
+
+function emergencySOS() {
+
+    const sosModal =
+        document.getElementById("sosModal");
+
+    const sosLocation =
+        document.getElementById("sosLocation");
+
+    if (sosModal) {
+        sosModal.style.display = "flex";
+    }
+
+    if (sosLocation) {
+        sosLocation.innerHTML =
+            "📍 Detecting your location...";
+    }
+
+    emergencyLatitude = null;
+    emergencyLongitude = null;
+
+
+    if (!navigator.geolocation) {
+
+        if (sosLocation) {
+
+            sosLocation.innerHTML =
+                "❌ Geolocation is not supported by your browser.";
+
+        }
+
+        return;
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            emergencyLatitude =
+                position.coords.latitude;
+
+            emergencyLongitude =
+                position.coords.longitude;
+
+
+            if (sosLocation) {
+
+                sosLocation.innerHTML =
+
+                    "📍 <strong>Location Detected</strong><br><br>" +
+
+                    "Latitude: " +
+                    emergencyLatitude +
+                    "<br>" +
+
+                    "Longitude: " +
+                    emergencyLongitude;
 
             }
 
+        },
 
 
-            navigator.geolocation.getCurrentPosition(
+        function(error) {
 
-
-                function(position) {
-
-
-                    emergencyLatitude =
-                        position.coords.latitude;
-
-
-                    emergencyLongitude =
-                        position.coords.longitude;
-
-
-
-                    document.getElementById("sosLocation").innerHTML =
-
-
-                        "📍 <strong>Location Detected</strong><br><br>" +
-
-
-                        "Latitude: " +
-                        emergencyLatitude +
-                        "<br>" +
-
-
-                        "Longitude: " +
-                        emergencyLongitude;
-
-
-                },
-
-
-                function(error) {
-
-
-                    document.getElementById("sosLocation").innerHTML =
-
-
-                        "❌ Unable to detect location.<br>" +
-
-
-                        "Please allow location access.";
-
-                }
-
+            console.error(
+                "Location Error:",
+                error
             );
 
+
+            if (sosLocation) {
+
+                sosLocation.innerHTML =
+
+                    "❌ Unable to detect location.<br><br>" +
+
+                    "Please allow location access " +
+                    "in your browser settings.";
+
+            }
+
+        },
+
+
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
         }
 
+    );
 
+}
 
-        // ================= CLOSE SOS POPUP =================
 
-        function closeSOSModal() {
+/* ================================================= */
+/* ================= CLOSE SOS ====================== */
+/* ================================================= */
 
+function closeSOSModal() {
 
-            document.getElementById("sosModal").style.display =
-                "none";
+    const sosModal =
+        document.getElementById("sosModal");
 
-        }
+    if (sosModal) {
 
+        sosModal.style.display = "none";
 
+    }
 
-        // ================= OPEN GOOGLE MAP =================
+}
 
-        function openEmergencyLocation() {
 
+/* ================================================= */
+/* ================= GOOGLE MAP ===================== */
+/* ================================================= */
 
-            if (
-                emergencyLatitude === null ||
-                emergencyLongitude === null
-            ) {
+function openEmergencyLocation() {
 
+    if (
+        emergencyLatitude === null ||
+        emergencyLongitude === null
+    ) {
 
-                alert(
-                    "📍 Location is not available yet."
-                );
+        alert(
+            "📍 Location is not available yet. Please wait for location detection."
+        );
 
+        return;
+    }
 
-                return;
 
-            }
+    const mapLink =
+        "https://www.google.com/maps?q=" +
+        emergencyLatitude +
+        "," +
+        emergencyLongitude;
 
 
+    window.open(
+        mapLink,
+        "_blank"
+    );
 
-            const mapLink =
-                "https://www.google.com/maps?q=" +
-                emergencyLatitude +
-                "," +
-                emergencyLongitude;
+}
 
 
+/* ================================================= */
+/* ============== EMERGENCY ASSESSMENT ============= */
+/* ================================================= */
 
-            window.open(
-                mapLink,
-                "_blank"
-            );
+function assessEmergency() {
 
-        }
+    const type =
+        document.getElementById(
+            "emergencyType"
+        ).value;
 
 
+    const injured =
+        document.getElementById(
+            "injured"
+        ).value;
 
-        // ================= EMERGENCY ASSESSMENT =================
 
-        function assessEmergency() {
+    const bleeding =
+        document.getElementById(
+            "bleeding"
+        ).value;
 
 
-            const type =
-                document.getElementById("emergencyType").value;
+    const breathing =
+        document.getElementById(
+            "breathing"
+        ).value;
 
 
-            const injured =
-                document.getElementById("injured").value;
+    const people =
+        parseInt(
+            document.getElementById(
+                "people"
+            ).value
+        );
 
 
-            const bleeding =
-                document.getElementById("bleeding").value;
+    if (
+        type === "" ||
+        injured === "" ||
+        bleeding === "" ||
+        breathing === ""
+    ) {
 
+        alert(
+            "⚠️ Please complete all emergency details."
+        );
 
-            const breathing =
-                document.getElementById("breathing").value;
+        return;
 
+    }
 
-            const people =
-                parseInt(
-                    document.getElementById("people").value
-                );
 
+    if (
+        isNaN(people) ||
+        people < 1 ||
+        people > 20
+    ) {
 
+        alert(
+            "⚠️ Please enter a valid number of affected people between 1 and 20."
+        );
 
-            // ================= CHECK REQUIRED FIELDS =================
+        return;
 
-            if (
-                type === "" ||
-                injured === "" ||
-                bleeding === "" ||
-                breathing === ""
-            ) {
+    }
 
 
-                alert(
-                    "⚠️ Please complete all emergency details."
-                );
+    let score = 0;
 
 
-                return;
+    if (type === "accident") {
+        score += 25;
+    }
 
-            }
 
+    if (type === "medical") {
+        score += 25;
+    }
 
 
-            // ================= RISK SCORE =================
+    if (type === "fire") {
+        score += 30;
+    }
 
-            let score = 0;
 
+    if (type === "crime") {
+        score += 20;
+    }
 
 
-            // Emergency Type
+    if (injured === "yes") {
+        score += 20;
+    }
 
-            if (type === "accident") {
 
-                score += 25;
+    if (bleeding === "yes") {
+        score += 25;
+    }
 
-            }
 
+    if (breathing === "yes") {
+        score += 30;
+    }
 
-            if (type === "medical") {
 
-                score += 25;
+    if (people >= 3) {
+        score += 10;
+    }
 
-            }
 
+    if (score > 100) {
+        score = 100;
+    }
 
-            if (type === "fire") {
 
-                score += 30;
+    let level;
+    let message;
 
-            }
 
+    if (score <= 30) {
 
-            if (type === "crime") {
+        level = "LOW";
 
-                score += 20;
+        message =
+            "Monitor the situation and seek help if needed.";
 
-            }
+    }
 
 
+    else if (score <= 60) {
 
-            // Injured
+        level = "MEDIUM";
 
-            if (injured === "yes") {
+        message =
+            "Consider contacting an emergency service.";
 
-                score += 20;
+    }
 
-            }
 
+    else if (score <= 80) {
 
+        level = "HIGH";
 
-            // Bleeding
+        message =
+            "Immediate emergency assistance is recommended.";
 
-            if (bleeding === "yes") {
+    }
 
-                score += 25;
 
-            }
+    else {
 
+        level = "CRITICAL";
 
+        message =
+            "Seek immediate emergency assistance.";
 
-            // Breathing
+    }
 
-            if (breathing === "yes") {
 
-                score += 30;
+    let recommendation;
+    let emergencyNumber;
 
-            }
 
+    if (type === "accident") {
 
+        recommendation =
+            "🚑 Contact Ambulance for accident assistance.";
 
-            // Number of people
+        emergencyNumber = "108";
 
-            if (people >= 3) {
+    }
 
-                score += 10;
 
-            }
+    else if (type === "medical") {
 
+        recommendation =
+            "❤️ Seek immediate medical assistance.";
 
+        emergencyNumber = "108";
 
-            // Maximum score
+    }
 
-            if (score > 100) {
 
-                score = 100;
+    else if (type === "fire") {
 
-            }
+        recommendation =
+            "🔥 Move to a safe location and contact Fire Service.";
 
+        emergencyNumber = "101";
 
+    }
 
-            // ================= SEVERITY =================
 
-            let level;
+    else if (type === "crime") {
 
-            let message;
+        recommendation =
+            "👮 Move to a safe place and contact Police.";
 
+        emergencyNumber = "100";
 
+    }
 
-            if (score <= 30) {
 
+    else {
 
-                level = "LOW";
+        recommendation =
+            "🚨 Contact Emergency Services for assistance.";
 
+        emergencyNumber = "112";
 
-                message =
-                    "Monitor the situation and seek help if needed.";
+    }
 
 
-            }
+    const result =
+        document.getElementById(
+            "assessmentResult"
+        );
 
 
-            else if (score <= 60) {
+    if (result) {
 
+        result.innerHTML =
 
-                level = "MEDIUM";
+            "<div class='assessment-result-card'>" +
 
+                "<div class='assessment-header'>" +
 
-                message =
-                    "Consider contacting an emergency service.";
+                    "<span class='result-icon'>🤖</span>" +
 
+                    "<div>" +
 
-            }
+                        "<p class='result-label'>ASSESSMENT COMPLETE</p>" +
 
+                        "<h3>Emergency Risk Assessment</h3>" +
 
-            else if (score <= 80) {
+                    "</div>" +
 
+                "</div>" +
 
-                level = "HIGH";
 
+                "<div class='risk-meter-section'>" +
 
-                message =
-                    "Immediate emergency assistance is recommended.";
+                    "<div class='risk-circle'>" +
 
+                        "<div class='risk-circle-inner'>" +
 
-            }
+                            "<strong id='animatedScore'>0</strong>" +
 
+                            "<span>/100</span>" +
 
-            else {
+                        "</div>" +
 
+                    "</div>" +
 
-                level = "CRITICAL";
+                "</div>" +
 
 
-                message =
-                    "Seek immediate emergency assistance.";
+                "<div class='risk-score-title'>" +
 
-            }
+                    "<span>Risk Score</span>" +
 
+                    "<strong>" +
+                        score +
+                        "/100" +
+                    "</strong>" +
 
+                "</div>" +
 
-            // =================================================
-            // SMART EMERGENCY RESPONSE RECOMMENDATION
-            // =================================================
 
-            let recommendation;
+                "<div class='severity-result'>" +
 
-            let emergencyNumber;
+                    "<strong>Severity Level</strong>" +
 
+                    "<span class='severity-badge " +
+                        level.toLowerCase() +
+                    "'>" +
 
-            if (type === "accident") {
+                        level +
 
+                    "</span>" +
 
-                recommendation =
-                    "🚑 Contact Ambulance for accident assistance.";
+                "</div>" +
 
 
-                emergencyNumber = "108";
+                "<div class='assessment-message'>" +
 
-            }
+                    "<p>" +
+                        message +
+                    "</p>" +
 
+                "</div>" +
 
-            else if (type === "medical") {
 
+                "<div class='recommendation-card'>" +
 
-                recommendation =
-                    "❤️ Seek immediate medical assistance.";
+                    "<div class='recommendation-icon'>🧠</div>" +
 
+                    "<div>" +
 
-                emergencyNumber = "108";
+                        "<h3>Recommended Response</h3>" +
 
-            }
+                        "<p>" +
+                            recommendation +
+                        "</p>" +
 
+                    "</div>" +
 
-            else if (type === "fire") {
-
-
-                recommendation =
-                    "🔥 Move to a safe location and contact Fire Service.";
-
-
-                emergencyNumber = "101";
-
-            }
-
-
-            else if (type === "crime") {
-
-
-                recommendation =
-                    "👮 Move to a safe place and contact Police.";
-
-
-                emergencyNumber = "100";
-
-            }
-
-
-            else {
-
-
-                recommendation =
-                    "🚨 Contact Emergency Services for assistance.";
-
-
-                emergencyNumber = "112";
-
-            }
-
-
-
-            // ================= DISPLAY RESULT =================
-
-            document.getElementById("assessmentResult").innerHTML =
-
-
-                "<h3>🤖 Emergency Assessment</h3>" +
-
-
-                "<p><strong>Risk Score:</strong> " +
-                score +
-                "/100</p>" +
-
-
-                "<p><strong>Severity:</strong> " +
-                level +
-                "</p>" +
-
-
-                "<p>" +
-                message +
-                "</p>" +
-
-
-                "<hr>" +
-
-
-                "<h3>🧠 Recommended Response</h3>" +
-
-
-                "<p>" +
-                recommendation +
-                "</p>" +
+                "</div>" +
 
 
                 "<a href='tel:" +
-                emergencyNumber +
-                "' class='call-btn'>" +
+                    emergencyNumber +
+                "' class='call-btn result-call-btn'>" +
 
-
-                "📞 Call " +
-                emergencyNumber +
-
+                    "📞 Call " +
+                    emergencyNumber +
 
                 "</a>" +
 
 
-                "<p style='color:green; font-weight:bold; margin-top:15px;'>" +
+                "<p class='saving-message'>" +
+
+                    "💾 Saving emergency report..." +
+
+                "</p>" +
+
+            "</div>";
 
 
-                "💾 Saving emergency report..." +
+        const scoreElement =
+            document.getElementById(
+                "animatedScore"
+            );
 
+
+        if (scoreElement) {
+
+            let currentScore = 0;
+
+            const animationDuration = 1000;
+
+            const animationStart =
+                performance.now();
+
+
+            function animateScore(currentTime) {
+
+                const elapsed =
+                    currentTime -
+                    animationStart;
+
+
+                const progress =
+                    Math.min(
+                        elapsed / animationDuration,
+                        1
+                    );
+
+
+                const easedProgress =
+                    1 -
+                    Math.pow(
+                        1 - progress,
+                        3
+                    );
+
+
+                currentScore =
+                    Math.round(
+                        score *
+                        easedProgress
+                    );
+
+
+                scoreElement.textContent =
+                    currentScore;
+
+
+                if (progress < 1) {
+
+                    requestAnimationFrame(
+                        animateScore
+                    );
+
+                }
+
+            }
+
+
+            requestAnimationFrame(
+                animateScore
+            );
+
+        }
+
+
+        const riskCircle =
+            result.querySelector(
+                ".risk-circle"
+            );
+
+
+        if (riskCircle) {
+
+            setTimeout(function() {
+
+                riskCircle.style.setProperty(
+                    "--risk-progress",
+                    score + "%"
+                );
+
+            }, 100);
+
+        }
+
+    }
+
+
+    fetch(
+        "/save-emergency",
+        {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
+
+            body: JSON.stringify({
+
+                emergency_type:
+                    type,
+
+                injured:
+                    injured,
+
+                bleeding:
+                    bleeding,
+
+                breathing:
+                    breathing,
+
+                people:
+                    people,
+
+                risk_score:
+                    score,
+
+                severity:
+                    level,
+
+                latitude:
+                    emergencyLatitude,
+
+                longitude:
+                    emergencyLongitude
+
+            })
+
+        }
+    )
+
+
+    .then(function(response) {
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Server returned an error."
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+
+    .then(function(data) {
+
+        if (!result) {
+            return;
+        }
+
+
+        if (data.success) {
+
+            result.innerHTML +=
+
+                "<p class='success-message'>" +
+
+                    "✅ Emergency report saved successfully." +
 
                 "</p>";
 
+        }
 
 
-            // ================= SAVE TO DATABASE =================
+        else {
 
-            fetch("/save-emergency", {
+            result.innerHTML +=
 
+                "<p class='error-message'>" +
 
-                method: "POST",
+                    "❌ " +
 
+                    (
+                        data.message ||
+                        "Unable to save report."
+                    ) +
 
-                headers: {
+                "</p>";
 
-                    "Content-Type":
-                        "application/json"
+        }
 
-                },
-
-
-                body: JSON.stringify({
-
-
-                    emergency_type: type,
+    })
 
 
-                    injured: injured,
+    .catch(function(error) {
+
+        console.error(
+            "Save Error:",
+            error
+        );
 
 
-                    bleeding: bleeding,
+        if (result) {
+
+            result.innerHTML +=
+
+                "<p class='error-message'>" +
+
+                    "❌ Unable to save emergency report." +
+
+                "</p>";
+
+        }
+
+    });
+
+}
 
 
-                    breathing: breathing,
+/* ================================================= */
+/* ============== ADD EMERGENCY CONTACT ============= */
+/* ================================================= */
+
+const contactForm =
+    document.getElementById(
+        "contactForm"
+    );
 
 
-                    people: people,
+if (contactForm) {
+
+    contactForm.addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
 
 
-                    risk_score: score,
+            const name =
+                document.getElementById(
+                    "contactName"
+                ).value.trim();
 
 
-                    severity: level
+            const phone =
+                document.getElementById(
+                    "contactPhone"
+                ).value.trim();
 
-                })
+
+            const message =
+                document.getElementById(
+                    "contactMessage"
+                );
+
+
+            if (!name || !phone) {
+
+                if (message) {
+
+                    message.innerHTML =
+                        "<p class='error-message'>" +
+                        "❌ Please enter name and phone number." +
+                        "</p>";
+
+                }
+
+                return;
+
+            }
+
+
+            fetch(
+                "/add-contact",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body: JSON.stringify({
+
+                        name: name,
+
+                        phone: phone
+
+                    })
+
+                }
+            )
+
+
+            .then(function(response) {
+
+                return response.json();
 
             })
 
 
-            .then(response =>
-                response.json()
-            )
+            .then(function(data) {
+
+                if (message) {
+
+                    if (data.success) {
+
+                        message.innerHTML =
+                            "<p class='success-message'>" +
+                            "✅ Emergency contact added successfully." +
+                            "</p>";
+
+                    }
 
 
-            .then(data => {
+                    else {
+
+                        message.innerHTML =
+                            "<p class='error-message'>" +
+                            "❌ " +
+                            (
+                                data.message ||
+                                "Unable to add contact."
+                            ) +
+                            "</p>";
+
+                    }
+
+                }
 
 
                 if (data.success) {
 
-
                     document.getElementById(
-                        "assessmentResult"
-                    ).innerHTML +=
-
-
-                        "<p style='color:green; font-weight:bold;'>" +
-
-
-                        "✅ Emergency report saved successfully." +
-
-
-                        "</p>";
-
-
-                }
-
-
-                else {
+                        "contactName"
+                    ).value = "";
 
 
                     document.getElementById(
-                        "assessmentResult"
-                    ).innerHTML +=
+                        "contactPhone"
+                    ).value = "";
 
 
-                        "<p style='color:red; font-weight:bold;'>" +
-
-
-                        "❌ " +
-                        data.message +
-
-
-                        "</p>";
+                    loadEmergencyContacts();
 
                 }
 
             })
 
 
-            .catch(error => {
+            .catch(function(error) {
+
+                console.error(
+                    "Contact Error:",
+                    error
+                );
 
 
-                console.error(error);
+                if (message) {
 
+                    message.innerHTML =
+                        "<p class='error-message'>" +
+                        "❌ Unable to add emergency contact." +
+                        "</p>";
 
-                document.getElementById(
-                    "assessmentResult"
-                ).innerHTML +=
-
-
-                    "<p style='color:red; font-weight:bold;'>" +
-
-
-                    "❌ Unable to save emergency report." +
-
-
-                    "</p>";
+                }
 
             });
 
         }
+    );
 
-    </script>
+}
 
+
+/* ================================================= */
+/* ============== LOAD EMERGENCY CONTACTS =========== */
+/* ================================================= */
+
+function loadEmergencyContacts() {
+
+    const container =
+        document.getElementById(
+            "savedContacts"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    fetch("/get-contacts")
+
+
+    .then(function(response) {
+
+        return response.json();
+
+    })
+
+
+    .then(function(data) {
+
+        if (!data.success) {
+
+            container.innerHTML =
+                "<p class='error-message'>" +
+                "❌ Unable to load contacts." +
+                "</p>";
+
+            return;
+
+        }
+
+
+        if (
+            !data.contacts ||
+            data.contacts.length === 0
+        ) {
+
+            container.innerHTML =
+                "<p>" +
+                "No emergency contacts added yet." +
+                "</p>";
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        data.contacts.forEach(
+            function(contact) {
+
+                const contactCard =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                contactCard.className =
+                    "saved-contact-card";
+
+
+                contactCard.innerHTML =
+
+                    "<div class='saved-contact-info'>" +
+
+                        "<strong>" +
+                            "👤 " +
+                            escapeHTML(contact.name) +
+                        "</strong>" +
+
+                        "<span>" +
+                            "📱 " +
+                            escapeHTML(contact.phone) +
+                        "</span>" +
+
+                    "</div>" +
+
+
+                    "<div class='saved-contact-actions'>" +
+
+                        "<a href='tel:" +
+                            encodeURIComponent(contact.phone) +
+                            "' class='contact-call-btn'>" +
+
+                            "📞 Call" +
+
+                        "</a>" +
+
+
+                        "<button type='button' " +
+                                "class='delete-contact-btn' " +
+                                "onclick='deleteEmergencyContact(" +
+                                contact.id +
+                                ")'>" +
+
+                            "🗑️ Delete" +
+
+                        "</button>" +
+
+                    "</div>";
+
+
+                container.appendChild(
+                    contactCard
+                );
+
+            }
+        );
+
+    })
+
+
+    .catch(function(error) {
+
+        console.error(
+            "Load Contacts Error:",
+            error
+        );
+
+
+        container.innerHTML =
+            "<p class='error-message'>" +
+            "❌ Unable to load emergency contacts." +
+            "</p>";
+
+    });
+
+}
+
+
+/* ================================================= */
+/* ============== DELETE EMERGENCY CONTACT ========== */
+/* ================================================= */
+
+function deleteEmergencyContact(contactId) {
+
+    if (
+        !confirm(
+            "Are you sure you want to delete this emergency contact?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    fetch(
+        "/delete-contact/" + contactId,
+        {
+            method: "DELETE"
+        }
+    )
+
+
+    .then(function(response) {
+
+        return response.json();
+
+    })
+
+
+    .then(function(data) {
+
+        const message =
+            document.getElementById(
+                "contactMessage"
+            );
+
+
+        if (message) {
+
+            if (data.success) {
+
+                message.innerHTML =
+                    "<p class='success-message'>" +
+                    "✅ Emergency contact deleted successfully." +
+                    "</p>";
+
+            }
+
+
+            else {
+
+                message.innerHTML =
+                    "<p class='error-message'>" +
+                    "❌ " +
+                    (
+                        data.message ||
+                        "Unable to delete contact."
+                    ) +
+                    "</p>";
+
+            }
+
+        }
+
+
+        if (data.success) {
+
+            loadEmergencyContacts();
+
+        }
+
+    })
+
+
+    .catch(function(error) {
+
+        console.error(
+            "Delete Contact Error:",
+            error
+        );
+
+    });
+
+}
+
+
+/* ================================================= */
+/* ================= HTML ESCAPE =================== */
+/* ================================================= */
+
+function escapeHTML(value) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        value;
+
+
+    return div.innerHTML;
+
+}
+
+
+/* ================================================= */
+/* ============== LOAD CONTACTS ON PAGE ============= */
+/* ================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        loadEmergencyContacts();
+
+    }
+);
+
+
+/* ================================================= */
+/* ============== CLOSE MODAL ON ESC =============== */
+/* ================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Escape") {
+
+            closeSOSModal();
+
+        }
+
+    }
+);
+
+
+/* ================================================= */
+/* ============== CLOSE MODAL OUTSIDE ============== */
+/* ================================================= */
+
+window.addEventListener(
+    "click",
+    function(event) {
+
+        const sosModal =
+            document.getElementById(
+                "sosModal"
+            );
+
+
+        if (
+            event.target === sosModal
+        ) {
+
+            closeSOSModal();
+
+        }
+
+    }
+);
+
+</script>
 
 </body>
 

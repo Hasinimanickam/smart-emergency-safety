@@ -3,6 +3,11 @@ import sqlite3
 import os
 from datetime import datetime
 
+
+# =========================================================
+# FLASK APPLICATION
+# =========================================================
+
 app = Flask(__name__)
 
 app.secret_key = "smart-emergency-secret-key"
@@ -21,7 +26,12 @@ DB_PATH = os.path.join(app.root_path, "users.db")
 
 def get_db():
 
-    return sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH)
+
+    # Enable foreign key support
+    conn.execute("PRAGMA foreign_keys = ON")
+
+    return conn
 
 
 # =========================================================
@@ -34,7 +44,9 @@ def init_db():
     cursor = conn.cursor()
 
 
-    # ================= USERS TABLE =================
+    # =====================================================
+    # USERS TABLE
+    # =====================================================
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
@@ -51,7 +63,9 @@ def init_db():
     """)
 
 
-    # ================= EMERGENCY REPORTS TABLE =================
+    # =====================================================
+    # EMERGENCY REPORTS TABLE
+    # =====================================================
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS emergency_reports (
@@ -74,16 +88,76 @@ def init_db():
 
             severity TEXT NOT NULL,
 
+            latitude REAL,
+
+            longitude REAL,
+
             created_at TEXT NOT NULL,
 
-            FOREIGN KEY (user_id) REFERENCES users(id)
+            FOREIGN KEY (user_id)
+                REFERENCES users(id)
+                ON DELETE CASCADE
 
         )
     """)
 
 
-    conn.commit()
+    # =====================================================
+    # EMERGENCY CONTACTS TABLE
+    # =====================================================
 
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS emergency_contacts (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            user_id INTEGER NOT NULL,
+
+            name TEXT NOT NULL,
+
+            phone TEXT NOT NULL,
+
+            FOREIGN KEY (user_id)
+                REFERENCES users(id)
+                ON DELETE CASCADE
+
+        )
+    """)
+
+
+    # =====================================================
+    # DATABASE MIGRATION
+    # Add latitude and longitude if old database
+    # does not contain these columns
+    # =====================================================
+
+    cursor.execute("""
+        PRAGMA table_info(emergency_reports)
+    """)
+
+    columns = [
+        column[1]
+        for column in cursor.fetchall()
+    ]
+
+
+    if "latitude" not in columns:
+
+        cursor.execute("""
+            ALTER TABLE emergency_reports
+            ADD COLUMN latitude REAL
+        """)
+
+
+    if "longitude" not in columns:
+
+        cursor.execute("""
+            ALTER TABLE emergency_reports
+            ADD COLUMN longitude REAL
+        """)
+
+
+    conn.commit()
     conn.close()
 
 
@@ -121,27 +195,33 @@ def login():
         )
 
 
-        conn = get_db()
+        # -------------------------------------------------
+        # Validate input
+        # -------------------------------------------------
 
+        if not email or not password:
+
+            return "Email and password are required."
+
+
+        conn = get_db()
         cursor = conn.cursor()
 
 
-        cursor.execute(
-            """
-            SELECT id, name
+        cursor.execute("""
+            SELECT
+                id,
+                name
             FROM users
             WHERE email = ?
             AND password = ?
-            """,
-            (
-                email,
-                password
-            )
-        )
+        """, (
+            email,
+            password
+        ))
 
 
         user = cursor.fetchone()
-
 
         conn.close()
 
@@ -155,7 +235,7 @@ def login():
             return redirect("/")
 
 
-        return "Invalid email or password"
+        return "Invalid email or password."
 
 
     return render_template("login.html")
@@ -191,22 +271,27 @@ def register():
         )
 
 
-        # Password confirmation
+        # -------------------------------------------------
+        # Validate registration
+        # -------------------------------------------------
+
+        if not name or not email or not password:
+
+            return "All fields are required."
+
 
         if password != confirm_password:
 
-            return "Passwords do not match"
+            return "Passwords do not match."
 
 
         conn = get_db()
-
         cursor = conn.cursor()
 
 
         try:
 
-            cursor.execute(
-                """
+            cursor.execute("""
                 INSERT INTO users
                 (
                     name,
@@ -220,13 +305,11 @@ def register():
                     ?,
                     ?
                 )
-                """,
-                (
-                    name,
-                    email,
-                    password
-                )
-            )
+            """, (
+                name,
+                email,
+                password
+            ))
 
 
             conn.commit()
@@ -236,7 +319,7 @@ def register():
 
             conn.close()
 
-            return "Email already registered"
+            return "Email already registered."
 
 
         conn.close()
@@ -249,13 +332,29 @@ def register():
 
 
 # =========================================================
+# FIRST AID
+# =========================================================
+
+@app.route("/first-aid")
+def first_aid():
+
+    if "user_id" not in session:
+
+        return redirect("/login")
+
+    return render_template("first-aid.html")
+
+
+# =========================================================
 # SAVE EMERGENCY REPORT
 # =========================================================
 
 @app.route("/save-emergency", methods=["POST"])
 def save_emergency():
 
+    # -----------------------------------------------------
     # Check login
+    # -----------------------------------------------------
 
     if "user_id" not in session:
 
@@ -268,8 +367,27 @@ def save_emergency():
         }), 401
 
 
-    data = request.get_json()
+    # -----------------------------------------------------
+    # Read JSON
+    # -----------------------------------------------------
 
+    data = request.get_json(silent=True)
+
+
+    if not data:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": "Invalid emergency data."
+
+        }), 400
+
+
+    # =====================================================
+    # GET EMERGENCY DETAILS
+    # =====================================================
 
     emergency_type = data.get(
         "emergency_type"
@@ -300,18 +418,113 @@ def save_emergency():
     )
 
 
+    # =====================================================
+    # GET LOCATION
+    # =====================================================
+
+    latitude = data.get(
+        "latitude"
+    )
+
+    longitude = data.get(
+        "longitude"
+    )
+
+
+    # =====================================================
+    # BASIC VALIDATION
+    # =====================================================
+
+    required_values = [
+
+        emergency_type,
+        injured,
+        bleeding,
+        breathing,
+        people,
+        risk_score,
+        severity
+
+    ]
+
+
+    if any(
+        value is None
+        for value in required_values
+    ):
+
+        return jsonify({
+
+            "success": False,
+
+            "message": "Incomplete emergency information."
+
+        }), 400
+
+
+    # =====================================================
+    # VALIDATE NUMBERS
+    # =====================================================
+
+    try:
+
+        people = int(people)
+
+        risk_score = int(risk_score)
+
+    except (ValueError, TypeError):
+
+        return jsonify({
+
+            "success": False,
+
+            "message": "Invalid numeric emergency data."
+
+        }), 400
+
+
+    # -----------------------------------------------------
+    # Keep risk score within 0-100
+    # -----------------------------------------------------
+
+    risk_score = max(
+        0,
+        min(risk_score, 100)
+    )
+
+
+    # -----------------------------------------------------
+    # Keep people count valid
+    # -----------------------------------------------------
+
+    people = max(
+        1,
+        people
+    )
+
+
+    # =====================================================
+    # CREATED TIME
+    # =====================================================
+
     created_at = datetime.now().strftime(
         "%Y-%m-%d %H:%M:%S"
     )
 
 
-    conn = get_db()
+    # =====================================================
+    # DATABASE CONNECTION
+    # =====================================================
 
+    conn = get_db()
     cursor = conn.cursor()
 
 
-    cursor.execute(
-        """
+    # =====================================================
+    # SAVE EMERGENCY REPORT
+    # =====================================================
+
+    cursor.execute("""
         INSERT INTO emergency_reports
         (
             user_id,
@@ -330,6 +543,10 @@ def save_emergency():
 
             severity,
 
+            latitude,
+
+            longitude,
+
             created_at
         )
 
@@ -343,35 +560,44 @@ def save_emergency():
             ?,
             ?,
             ?,
+            ?,
+            ?,
             ?
         )
-        """,
-        (
-            session["user_id"],
+    """, (
 
-            emergency_type,
+        session["user_id"],
 
-            injured,
+        emergency_type,
 
-            bleeding,
+        injured,
 
-            breathing,
+        bleeding,
 
-            people,
+        breathing,
 
-            risk_score,
+        people,
 
-            severity,
+        risk_score,
 
-            created_at
-        )
-    )
+        severity,
+
+        latitude,
+
+        longitude,
+
+        created_at
+
+    ))
 
 
     conn.commit()
-
     conn.close()
 
+
+    # =====================================================
+    # RESPONSE
+    # =====================================================
 
     return jsonify({
 
@@ -383,13 +609,272 @@ def save_emergency():
 
 
 # =========================================================
+# ADD EMERGENCY CONTACT
+# =========================================================
+
+@app.route("/add-contact", methods=["POST"])
+def add_contact():
+
+    # -----------------------------------------------------
+    # Check login
+    # -----------------------------------------------------
+
+    if "user_id" not in session:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": "Please login first."
+
+        }), 401
+
+
+    data = request.get_json(
+        silent=True
+    )
+
+
+    if not data:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": "Invalid contact data."
+
+        }), 400
+
+
+    name = data.get(
+        "name",
+        ""
+    ).strip()
+
+    phone = data.get(
+        "phone",
+        ""
+    ).strip()
+
+
+    # -----------------------------------------------------
+    # Validate
+    # -----------------------------------------------------
+
+    if not name or not phone:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": "Name and phone number are required."
+
+        }), 400
+
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+
+    cursor.execute("""
+        INSERT INTO emergency_contacts
+        (
+            user_id,
+            name,
+            phone
+        )
+
+        VALUES
+        (
+            ?,
+            ?,
+            ?
+        )
+    """, (
+
+        session["user_id"],
+
+        name,
+
+        phone
+
+    ))
+
+
+    conn.commit()
+    conn.close()
+
+
+    return jsonify({
+
+        "success": True,
+
+        "message": "Emergency contact added successfully."
+
+    })
+
+
+# =========================================================
+# GET EMERGENCY CONTACTS
+# =========================================================
+
+@app.route("/get-contacts", methods=["GET"])
+def get_contacts():
+
+    # -----------------------------------------------------
+    # Check login
+    # -----------------------------------------------------
+
+    if "user_id" not in session:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": "Please login first."
+
+        }), 401
+
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+
+    cursor.execute("""
+        SELECT
+            id,
+            name,
+            phone
+
+        FROM emergency_contacts
+
+        WHERE user_id = ?
+
+        ORDER BY id DESC
+    """, (
+        session["user_id"],
+    ))
+
+
+    contacts = cursor.fetchall()
+
+    conn.close()
+
+
+    # -----------------------------------------------------
+    # Convert database rows to JSON
+    # -----------------------------------------------------
+
+    contact_list = []
+
+
+    for contact in contacts:
+
+        contact_list.append({
+
+            "id": contact[0],
+
+            "name": contact[1],
+
+            "phone": contact[2]
+
+        })
+
+
+    return jsonify({
+
+        "success": True,
+
+        "contacts": contact_list
+
+    })
+
+
+# =========================================================
+# DELETE EMERGENCY CONTACT
+# =========================================================
+
+@app.route(
+    "/delete-contact/<int:contact_id>",
+    methods=["DELETE"]
+)
+def delete_contact(contact_id):
+
+    # -----------------------------------------------------
+    # Check login
+    # -----------------------------------------------------
+
+    if "user_id" not in session:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": "Please login first."
+
+        }), 401
+
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+
+    # -----------------------------------------------------
+    # Delete only current user's contact
+    # -----------------------------------------------------
+
+    cursor.execute("""
+        DELETE FROM emergency_contacts
+
+        WHERE id = ?
+
+        AND user_id = ?
+    """, (
+        contact_id,
+
+        session["user_id"]
+    ))
+
+
+    conn.commit()
+
+
+    deleted_rows = cursor.rowcount
+
+
+    conn.close()
+
+
+    if deleted_rows == 0:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": "Contact not found."
+
+        }), 404
+
+
+    return jsonify({
+
+        "success": True,
+
+        "message": "Emergency contact deleted successfully."
+
+    })
+
+
+# =========================================================
 # DASHBOARD
 # =========================================================
 
 @app.route("/dashboard")
 def dashboard():
 
+    # -----------------------------------------------------
     # Check login
+    # -----------------------------------------------------
 
     if "user_id" not in session:
 
@@ -397,7 +882,6 @@ def dashboard():
 
 
     conn = get_db()
-
     cursor = conn.cursor()
 
 
@@ -411,8 +895,7 @@ def dashboard():
         FROM emergency_reports
 
         WHERE user_id = ?
-    """,
-    (
+    """, (
         session["user_id"],
     ))
 
@@ -432,8 +915,7 @@ def dashboard():
         WHERE user_id = ?
 
         AND severity = 'LOW'
-    """,
-    (
+    """, (
         session["user_id"],
     ))
 
@@ -453,8 +935,7 @@ def dashboard():
         WHERE user_id = ?
 
         AND severity = 'MEDIUM'
-    """,
-    (
+    """, (
         session["user_id"],
     ))
 
@@ -474,8 +955,7 @@ def dashboard():
         WHERE user_id = ?
 
         AND severity = 'HIGH'
-    """,
-    (
+    """, (
         session["user_id"],
     ))
 
@@ -495,8 +975,7 @@ def dashboard():
         WHERE user_id = ?
 
         AND severity = 'CRITICAL'
-    """,
-    (
+    """, (
         session["user_id"],
     ))
 
@@ -553,8 +1032,7 @@ def dashboard():
         GROUP BY emergency_type
 
         ORDER BY COUNT(*) DESC
-    """,
-    (
+    """, (
         session["user_id"],
     ))
 
@@ -584,8 +1062,7 @@ def dashboard():
         ORDER BY id DESC
 
         LIMIT 5
-    """,
-    (
+    """, (
         session["user_id"],
     ))
 
@@ -597,7 +1074,7 @@ def dashboard():
 
 
     # =====================================================
-    # SEND DATA TO DASHBOARD.HTML
+    # SEND DATA TO DASHBOARD
     # =====================================================
 
     return render_template(
@@ -636,15 +1113,22 @@ def dashboard():
 @app.route("/emergency-history")
 def emergency_history():
 
+    # -----------------------------------------------------
+    # Check login
+    # -----------------------------------------------------
+
     if "user_id" not in session:
 
         return redirect("/login")
 
 
     conn = get_db()
-
     cursor = conn.cursor()
 
+
+    # =====================================================
+    # GET EMERGENCY REPORTS
+    # =====================================================
 
     cursor.execute("""
         SELECT
@@ -670,8 +1154,7 @@ def emergency_history():
         WHERE user_id = ?
 
         ORDER BY id DESC
-    """,
-    (
+    """, (
         session["user_id"],
     ))
 
@@ -681,6 +1164,10 @@ def emergency_history():
 
     conn.close()
 
+
+    # =====================================================
+    # SEND DATA TO HISTORY PAGE
+    # =====================================================
 
     return render_template(
 
@@ -711,4 +1198,6 @@ if __name__ == "__main__":
 
     init_db()
 
-    app.run(debug=True)
+    app.run(
+        debug=True
+    )
