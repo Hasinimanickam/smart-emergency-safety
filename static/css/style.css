@@ -5486,3 +5486,349 @@ img {
         padding: 22px !important;
     }
 }
+
+
+/* =====================================
+   SMART EMERGENCY - MOBILE RESPONSIVE
+   ===================================== */
+
+@media (max-width: 768px) {
+    html {
+        scroll-padding-top: 20px;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+    /* Sidebar */
+    .navbar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        padding: 15px;
+    }
+
+    .logo {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+    }
+
+    .nav-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .nav-links > a {
+        padding: 11px 10px;
+        font-size: 13px;
+    }
+
+    .nav-user {
+        margin-top: 15px;
+    }
+
+    /* Main sections */
+    .hero,
+    .section,
+    .footer,
+    .dashboard-section {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .hero {
+        min-height: auto;
+        padding: 45px 20px;
+        flex-direction: column;
+        gap: 35px;
+        text-align: center;
+    }
+
+    .hero-content {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .hero h1 {
+        font-size: clamp(32px, 8vw, 44px);
+    }
+
+    .hero-description {
+        font-size: 16px;
+    }
+
+    .hero-actions {
+        justify-content: center;
+    }
+
+    .sos-btn,
+    .hero-secondary-btn {
+        width: 100%;
+        min-width: 0;
+    }
+
+    /* Hero image */
+    .hero-visual {
+        width: 100%;
+        max-width: 340px;
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+
+    .hero-circle {
+        width: 85%;
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+
+    .floating-card {
+        padding: 9px 11px;
+        gap: 6px;
+    }
+
+    .location-card {
+        top: 10px;
+        left: 0;
+    }
+
+    .safety-card {
+        right: 0;
+        bottom: 10px;
+    }
+
+    /* Sections and forms */
+    .section {
+        padding: 45px 18px;
+    }
+
+    .section h2 {
+        font-size: 28px;
+    }
+
+    .emergency-form,
+    .assessment-result-card,
+    .my-contacts-section {
+        padding: 20px;
+    }
+
+    .risk-result-main {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .risk-result-info {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Cards */
+    .guide-container,
+    .contact-container {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dashboard-header h1 {
+        font-size: 28px;
+    }
+
+    /* Contacts */
+    .saved-contact-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .saved-contact-actions {
+        flex-wrap: wrap;
+    }
+
+    /* SOS popup */
+    .sos-modal {
+        padding: 12px;
+    }
+
+    .sos-modal-content {
+        padding: 30px 18px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+
+@media (max-width: 400px) {
+    .nav-links {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    .section h2 {
+        font-size: 25px;
+    }
+
+    .risk-circle {
+        width: 165px;
+        height: 165px;
+    }
+
+    .risk-circle::before {
+        width: 125px;
+        height: 125px;
+    }
+}
+
+
+/* Fix mobile sidebar and content layout */
+@media (max-width: 768px) {
+    .navbar {
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        position: relative;
+        padding: 12px 15px;
+    }
+
+    .logo {
+        padding: 5px 5px 12px;
+        margin-bottom: 12px;
+        gap: 6px;
+    }
+
+    .logo img {
+        width: 48px;
+        height: 48px;
+    }
+
+    .logo span {
+        font-size: 18px;
+    }
+
+    .nav-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 5px;
+    }
+
+    .nav-links > a {
+        min-height: 40px;
+        padding: 9px 10px;
+        font-size: 13px;
+    }
+
+    .nav-user {
+        margin-top: 12px;
+        padding-top: 10px;
+        gap: 6px;
+    }
+
+    .nav-user span {
+        padding: 4px;
+    }
+
+    .nav-user a {
+        padding: 9px;
+    }
+
+    .hero,
+    .section,
+    .footer,
+    .dashboard-section {
+        margin-left: 0 !important;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .hero {
+        padding: 35px 18px;
+    }
+
+    .section {
+        padding: 35px 16px;
+    }
+
+    .emergency-form {
+        width: 100%;
+        padding: 20px 16px;
+    }
+
+    .hero-visual {
+        max-width: 300px;
+    }
+}
+
+
+/* Compact mobile navigation */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 12px;
+        align-items: stretch;
+    }
+
+    .logo {
+        padding: 0 0 12px;
+        margin-bottom: 10px;
+        gap: 5px;
+    }
+
+    .logo img {
+        width: 44px;
+        height: 44px;
+    }
+
+    .logo span {
+        font-size: 18px;
+    }
+
+    .nav-links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 2px 8px;
+    }
+
+    .nav-links > a {
+        min-width: 0;
+        padding: 9px 5px;
+        min-height: 36px;
+        font-size: 13px;
+        transform: none;
+    }
+
+    .nav-user {
+        margin-top: 8px;
+        padding-top: 8px;
+        gap: 5px;
+        width: 100%;
+    }
+
+    .nav-user span {
+        overflow-wrap: anywhere;
+        font-size: 12px;
+    }
+
+    .nav-user a {
+        width: 100%;
+        padding: 9px;
+        box-sizing: border-box;
+    }
+
+    .hero {
+        padding: 35px 18px;
+        gap: 25px;
+    }
+}
+
